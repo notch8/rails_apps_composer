@@ -2,44 +2,72 @@
 
 if config['oiplayer']
   if ((recipes.include? 'jquery') && (recipes.include? 'home_page'))
-    inside "app/assets/javascripts" do
-      get "https://raw.github.com/elfuego/oiplayer/master/js/jquery.oiplayer.js", "jquery.oiplayer.js"
-    end
-    inside "app/assets/stylesheets" do
-      # get the oiplayer stylesheet
-      get "https://raw.github.com/elfuego/oiplayer/master/css/oiplayer.css", "oiplayer.css.erb"
-      # change images/.. paths to use ruby asset_path() helper function
-      gsub_file "oiplayer.css.erb", /images\/bg-whitish.png/, '<%= asset_path "bg-whitish.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/bg-blackis.png/, '<%= asset_path "bg-blackish.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/controls-fullscreen.png/, '<%= asset_path "controls-fullscreen.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/controls-play.png/, '<%= asset_path "controls-play.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/controls-pause.png/, '<%= asset_path "controls-pause.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/controls-soundon.png/, '<%= asset_path "controls-soundon.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/controls-soundoff.png/, '<%= asset_path "controls-soundoff.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/slider11-long.png/, '<%= asset_path "slider11-long.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/slider11-pos.png/, '<%= asset_path "slider11-pos.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/preview_video.png/, '<%= asset_path "preview_video.png" %>'
-      gsub_file "oiplayer.css.erb", /images\/preview_audio.png/, '<%= asset_path "preview_audio.png" %>'
-      
-    end
-    inside "app/assets/images" do
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/bg-blackish.png", "bg-blackish.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-forward.png", "controls-forward.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-play.png", "controls-play.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/preview_audio.png", "preview_audio.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/slider11-long.png", "slider11-long.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/bg-whitish.png", "bg-whitish.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-fullscreen.png", "controls-fullscreen.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-soundoff.png", "controls-soundoff.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/preview_video.png", "preview_video.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/slider11-pos.png", "slider11-pos.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-back.png", "controls-back.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-pause.png", "controls-pause.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-soundon.png", "controls-soundon.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/slider11-left.png", "slider11-left.png"
-      get "https://raw.github.com/elfuego/oiplayer/master/css/images/slider11-right.png", "slider11-right.png"
-    end
     after_bundler do
+      #
+      # Javascripts
+      #
+      # Download
+      inside "lib/assets/javascripts" do
+        get "https://raw.github.com/elfuego/oiplayer/master/js/jquery.oiplayer.js", "jquery_oiplayer.js"
+      end
+      # Configure asset pipeline
+      inside "app/assets/javascripts" do
+        inject_into_file 'application.js', :before => "//= require_tree ." do 
+<<-JAVASCRIPT
+//= require jquery_oiplayer
+JAVASCRIPT
+        end
+      end
+      #
+      # Stylesheets
+      #
+      # Download
+      inside "lib/assets/stylesheets" do
+        # get the oiplayer stylesheet
+        get "https://raw.github.com/elfuego/oiplayer/master/css/oiplayer.css", "oiplayer.css.erb"
+        # change images/.. paths to use ruby asset_path() helper function
+        gsub_file "oiplayer.css.erb", /images\/bg-whitish.png/, '<%= asset_path "bg-whitish.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/bg-blackis.png/, '<%= asset_path "bg-blackish.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/controls-fullscreen.png/, '<%= asset_path "controls-fullscreen.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/controls-play.png/, '<%= asset_path "controls-play.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/controls-pause.png/, '<%= asset_path "controls-pause.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/controls-soundon.png/, '<%= asset_path "controls-soundon.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/controls-soundoff.png/, '<%= asset_path "controls-soundoff.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/slider11-long.png/, '<%= asset_path "slider11-long.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/slider11-pos.png/, '<%= asset_path "slider11-pos.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/preview_video.png/, '<%= asset_path "preview_video.png" %>'
+        gsub_file "oiplayer.css.erb", /images\/preview_audio.png/, '<%= asset_path "preview_audio.png" %>'
+        
+      end
+      # Configure asset pipeline
+      inside "app/assets/stylesheets" do
+        inject_into_file 'application.css', :before => "*= require_tree ." do
+<<-CSS
+*= require oiplayer 
+CSS
+        end
+      end
+      #
+      # Images
+      #
+      inside "lib/assets/images" do
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/bg-blackish.png", "bg-blackish.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-forward.png", "controls-forward.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-play.png", "controls-play.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/preview_audio.png", "preview_audio.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/slider11-long.png", "slider11-long.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/bg-whitish.png", "bg-whitish.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-fullscreen.png", "controls-fullscreen.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-soundoff.png", "controls-soundoff.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/preview_video.png", "preview_video.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/slider11-pos.png", "slider11-pos.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-back.png", "controls-back.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-pause.png", "controls-pause.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/controls-soundon.png", "controls-soundon.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/slider11-left.png", "slider11-left.png"
+        get "https://raw.github.com/elfuego/oiplayer/master/css/images/slider11-right.png", "slider11-right.png"
+      end
+
       append_file 'app/views/home/index.html.erb' do 
 <<-ERB
 <h1>OIPlayer jQuery plugin</h1> 
@@ -70,26 +98,18 @@ if config['oiplayer']
     attributes the respective tag has like poster, width, controls, autoplay etc.
   </p>           
 ERB
-    end
-      remove_file 'app/assets/javascripts/oiplayer.js'
-      create_file 'app/assets/javascripts/oiplayer.js' do
-<<-ERB
-$(function() { 
-  $('body').oiplayer({   // on all video and audio tags in body
-      'server' : 'http://www.openimages.eu',
-      'jar' : '/oiplayer/plugins/cortado-ovt-stripped-wm_r38710.jar',
-      'flash' : '/oiplayer/plugins/flowplayer-3.1.5.swf',
-      'controls' : 'top',
-      'log' : 'error'
-  });
-});
-ERB
       end
-    end
-  else
+      remove_file 'app/assets/javascripts/oiplayer.js.coffee'
+      create_file 'app/assets/javascripts/oiplayer.js.coffee' do
+<<-COFFEE
+jQuery -> $('body').oiplayer 'server' : 'http://www.openimages.eu', 'jar' : '/oiplayer/plugins/cortado-ovt-stripped-wm_r38710.jar', 'flash' : '/oiplayer/plugins/flowplayer-3.1.5.swf', 'controls' : 'top', 'log' : 'error'
+COFFEE
+      end
+    end # after_bundler
+  else # if ((recipes.include? 'jquery') && (recipes.include? 'home_page'))
     say_wizard "You need to install the jQuery and Home Page recipes to use OIPlayer."
-  end
-end
+  end  # if ((recipes.include? 'jquery') && (recipes.include? 'home_page'))
+end # if config['oiplayer']
 
 __END__
 

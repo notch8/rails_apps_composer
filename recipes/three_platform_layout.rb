@@ -7,10 +7,47 @@ if config['layout']
     #
     # Download
     inside "app/assets/stylesheets" do
+      # shared mixin and variables
+      create_file "shared.css.scss" do
+<<-SCSS
+@mixin rounded-corners {
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+}
+
+@mixin rounded-top {
+  -webkit-border-top-left-radius: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+@mixin rounded-bottom {
+    -webkit-border-bottom-left-radius: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    border-bottom-left-radius: 10px;
+    -moz-border-radius-bottomright: 10px;
+    -webkit-border-bottom-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+@mixin box-shadow {
+  -moz-box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
+  -webkit-box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
+  box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
+}
+SCSS
+      end # shared.css.scss
       # copy over the stylesheets
       create_file "text.css.scss.erb" do
 <<-SCSS
 @charset "UTF-8";
+
+@import "shared";
+
 body {
 	font-family: Arial;
 	font-size: 12px;
@@ -49,12 +86,8 @@ a {
 	margin: 0px 0px 10px 0px;
 	height: 175px;
 	border: 1px solid #414141;
-	border-radius: 10px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	-moz-box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
-	-webkit-box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
-	box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
+        @include rounded-corners;
+        @include box-shadow;
     }
     figcaption { 
       font-size: .9em; 
@@ -69,6 +102,7 @@ SCSS
       end # text.css.scss.erb
       create_file "layout.css.scss.erb" do
 <<-SCSS
+@import "shared";
 
 /* Layout */
 
@@ -81,12 +115,7 @@ SCSS
     display: block;
     position: relative;
     height: 175px;
-    -webkit-border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-topright: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    @include rounded-top;
     background: url(<%= asset_path 'banner_large.jpg' %>) no-repeat 0px 0px;
         
     a.logo {
@@ -127,9 +156,7 @@ SCSS
       margin: 15px 20px 20px 0px;
       padding: 10px;
       border: 1px solid #bdbdbd;
-      border-radius: 10px;
-      -webkit-border-radius: 10px;
-      -moz-border-radius: 10px;
+      @include rounded-corners;
       background: #f1f1f1;
     }
   }
@@ -143,10 +170,8 @@ SCSS
 
     a {
       border: 1px solid #fff;
-      border-radius: 16px;
+      @include rounded-corners;
       color: #fff;
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px;
       padding: 7px 20px 7px 20px;
       text-decoration: none;
       font-weight: bold;
@@ -169,15 +194,7 @@ SCSS
     font-size: .9em;
     color: #757575;
     background-color: #fff;
-    -webkit-border-bottom-left-radius: 10px;
-    -moz-border-radius-bottomleft: 10px;
-    border-bottom-left-radius: 10px;
-    -moz-border-radius-bottomright: 10px;
-    -webkit-border-bottom-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-    -moz-box-shadow: 0px 5px 3px rgba(0,0,0,0.3);
-    -webkit-box-shadow: 0px 5px 3px rgba(0,0,0,0.3);
-    box-shadow: 0px 5px 3px rgba(0,0,0,0.3);
+    @include box-shadow;
     background: -moz-linear-gradient(top, #ffffff 60%, #cccccc 90%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,#ffffff), color-stop(90%,#cccccc));
   }
@@ -283,46 +300,46 @@ SCSS
       remove_file "index.html.erb"
       create_file "index.html.erb" do
 <<-ERB
-	<body>
-		<div class="page">
-			<header><a class="logo" href="#"></a></header>
-			<div class="page_content">
-				<div class="page_content_container_left">
-					<div class="content">
-						<h1>Heading H1</h1>
-						<p>Suspendisse vestibulum dignissim quam. Phasellus nulla purus interdum ac venenatis non varius rutrum leo. Pellentesque habitant morbi tristique senectus et netus et malesuada.</p>
-						<h2>Heading H2</h2>
-						<p>Fusce magna mi, porttitor quis, convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
-						<ul>
-							<li>Integer vel augue. <a href="#">Phasellus nulla purus</a>, interdum ac venenatis non varius rutrum leo.</li>
-							<li>Suspendisse vestibulum dignissim quam.</li>
-						</ul>
-						<p>Phasellus nulla purus, interdum ac, venenatis non convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
-					</div>
-				</div>
-				<div class="page_content_container_right">
-					<div class="content_sidebar">
-						<h3>Heading H3</h3>
-						<figure>
-							<div class="figure_photo"></div>
-							<figcaption>Duis a eros lit ora tor quent per conu bia nos tra per.</figcaption>
-							<div class="clear_both"></div>
-						</figure>
-						<p>Integer vel augue phas ellus nul la purus inte rdum enatis fames ac turpis egestas.</p>
-						<p>Pellent <a href="#">morbi tris</a> esque habitant senectus et netus et malesuada.</p>
-						<div class="clear_both"></div>
-					</div>
-				</div>
-				<div class="clear_both"></div>
-				<nav>
-					<a href="#">Who We Are</a>
-					<a href="#">What We Do</a>
-					<a href="#">About Us</a>
-				</nav>
-			</div>
-			<footer>&copy; 2011 &bull; Your Organization Name</footer>
-		</div>
-	</body>
+<body>
+  <div class="page">
+    <header><a class="logo" href="#"></a></header>
+    <div class="page_content">
+        <div class="page_content_container_left">
+          <div class="content">
+            <h1>Heading H1</h1>
+            <p>Suspendisse vestibulum dignissim quam. Phasellus nulla purus interdum ac venenatis non varius rutrum leo. Pellentesque habitant morbi tristique senectus et netus et malesuada.</p>
+            <h2>Heading H2</h2>
+            <p>Fusce magna mi, porttitor quis, convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
+            <ul>
+              <li>Integer vel augue. <a href="#">Phasellus nulla purus</a>, interdum ac venenatis non varius rutrum leo.</li>
+              <li>Suspendisse vestibulum dignissim quam.</li>
+            </ul>
+            <p>Phasellus nulla purus, interdum ac, venenatis non convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
+          </div>
+        </div>
+        <div class="page_content_container_right">
+          <div class="content_sidebar">
+            <h3>Heading H3</h3>
+            <figure>
+              <div class="figure_photo"></div>
+              <figcaption>Duis a eros lit ora tor quent per conu bia nos tra per.</figcaption>
+              <div class="clear_both"></div>
+            </figure>
+            <p>Integer vel augue phas ellus nul la purus inte rdum enatis fames ac turpis egestas.</p>
+            <p>Pellent <a href="#">morbi tris</a> esque habitant senectus et netus et malesuada.</p>
+            <div class="clear_both"></div>
+          </div>
+        </div>
+        <div class="clear_both"></div>
+        <nav>
+          <a href="#">Who We Are</a>
+          <a href="#">What We Do</a>
+          <a href="#">About Us</a>
+        </nav>
+      </div>
+      <footer>&copy; 2011 &bull; Atomic Broadcast</footer>
+    </div>
+</body>
 ERB
       end
     end

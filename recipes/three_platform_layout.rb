@@ -41,7 +41,7 @@ if config['layout']
 }
 SCSS
       end # shared.css.scss
-      # copy over the stylesheets
+      # text fonts and sizes
       create_file "text.css.scss.erb" do
 <<-SCSS
 @charset "UTF-8";
@@ -100,6 +100,7 @@ a {
 }
 SCSS
       end # text.css.scss.erb
+      # style the main blocks
       create_file "layout.css.scss.erb" do
 <<-SCSS
 @import "shared";
@@ -203,6 +204,7 @@ SCSS
 .clear_both { clear: both; line-height: 1px; }
 SCSS
       end # layout.css.scss.erb
+      # change layout for small screens (i.e. smart phones)
       create_file "small_screen.css.scss.erb" do
 <<-SCSS
 /* Small Screen Rules */
@@ -270,6 +272,7 @@ SCSS
 }                                                                                                                           
 SCSS
       end # small_screen.css.scss.erb
+      # change layout for medium screens (i.e. iPad)
       create_file "medium_screen.css.scss.erb" do
 <<-SCSS
 /* Medium Screen Rules */
@@ -308,7 +311,9 @@ SCSS
             }
 
             figcaption { font-size: .8em; }
-        } // .content_sidebar figure                                                                
+        } // .content_sidebar figure
+    } // .page
+} // @media                                                                
 SCSS
       end # medium_screen.css.scss.erb
     end
@@ -332,50 +337,94 @@ SCSS
       FileUtils.cp_r image_dir + "ie_transparency_over.png", "ie_transparency_over.png"
     end
     #
+    # app/views/layouts
+    #
+    inside "app/views/layouts" do
+      # _header.html.erb
+      remove_file "_header.html.erb"
+      create_file "_header.html.erb" do
+<<-HEADER
+<header>
+    <a class="logo" href="#"></a>
+</header>
+HEADER
+      end # create_file "_header.html.erb"
+      # application.html.erb
+      inject_into_file 'application.html.erb', :after => "<body>" do
+<<-RUBY
+
+<div class="page">
+<%= render "layouts/header" %>
+<div class="page_content">
+RUBY
+      end
+    end
+    inside "app/views/layouts" do
+      inject_into_file "application.html.erb", :after => "<%= yield %>" do
+<<-RUBY
+
+<%= render "layouts/nav" %>
+</div>
+<%= render "layouts/footer" %>
+</div>
+<%= debug params if Rails.env.development? %>      
+RUBY
+      end # gsub_file 'application.html.erb'
+      # _nav.html.erb      
+      remove_file "_nav.html.erb"
+      create_file "_nav.html.erb" do
+<<-HTMLERB
+<nav>
+  <a href="#">Who We Are</a>
+  <a href="#">What We Do</a>
+  <a href="#">About Us</a>
+</nav>  
+HTMLERB
+      end # create_file _nav.html.erb
+      # _footer.html.erb
+      remove_file "_footer.html.erb"
+      create_file "_footer.html.erb" do
+<<-RUBY
+<footer>
+  &copy; 2011 &bull; Atomic Broadcast
+</footer>   
+RUBY
+      end # create_file _footer.html.erb
+    end # app/views/layouts
+    #
     # index.html.erb
     #
     inside "app/views/home" do
       remove_file "index.html.erb"
       create_file "index.html.erb" do
 <<-ERB
-  <div class="page">
-    <header><a class="logo" href="#"></a></header>
-    <div class="page_content">
-        <div class="page_content_container_left">
-          <div class="content">
-            <h1>Heading H1</h1>
-            <p>Suspendisse vestibulum dignissim quam. Phasellus nulla purus interdum ac venenatis non varius rutrum leo. Pellentesque habitant morbi tristique senectus et netus et malesuada.</p>
-            <h2>Heading H2</h2>
-            <p>Fusce magna mi, porttitor quis, convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
-            <ul>
-              <li>Integer vel augue. <a href="#">Phasellus nulla purus</a>, interdum ac venenatis non varius rutrum leo.</li>
-              <li>Suspendisse vestibulum dignissim quam.</li>
-            </ul>
-            <p>Phasellus nulla purus, interdum ac, venenatis non convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
-          </div>
-        </div>
-        <div class="page_content_container_right">
-          <div class="content_sidebar">
-            <h3>Heading H3</h3>
-            <figure>
-              <div class="figure_photo"></div>
-              <figcaption>Duis a eros lit ora tor quent per conu bia nos tra per.</figcaption>
-              <div class="clear_both"></div>
-            </figure>
-            <p>Integer vel augue phas ellus nul la purus inte rdum enatis fames ac turpis egestas.</p>
-            <p>Pellent <a href="#">morbi tris</a> esque habitant senectus et netus et malesuada.</p>
-            <div class="clear_both"></div>
-          </div>
-        </div>
-        <div class="clear_both"></div>
-        <nav>
-          <a href="#">Who We Are</a>
-          <a href="#">What We Do</a>
-          <a href="#">About Us</a>
-        </nav>
-      </div>
-      <footer>&copy; 2011 &bull; Atomic Broadcast</footer>
-    </div>
+<div class="page_content_container_left">
+  <div class="content">
+    <h1>Heading H1</h1>
+    <p>Suspendisse vestibulum dignissim quam. Phasellus nulla purus interdum ac venenatis non varius rutrum leo. Pellentesque habitant morbi tristique senectus et netus et malesuada.</p>
+    <h2>Heading H2</h2>
+    <p>Fusce magna mi, porttitor quis, convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
+    <ul>
+      <li>Integer vel augue. <a href="#">Phasellus nulla purus</a>, interdum ac venenatis non varius rutrum leo.</li>
+      <li>Suspendisse vestibulum dignissim quam.</li>
+    </ul>
+    <p>Phasellus nulla purus, interdum ac, venenatis non convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
+  </div>
+</div>
+<div class="page_content_container_right">
+  <div class="content_sidebar">
+    <h3>Heading H3</h3>
+    <figure>
+      <div class="figure_photo"></div>
+      <figcaption>Duis a eros lit ora tor quent per conu bia nos tra per.</figcaption>
+      <div class="clear_both"></div>
+    </figure>
+    <p>Integer vel augue phas ellus nul la purus inte rdum enatis fames ac turpis egestas.</p>
+    <p>Pellent <a href="#">morbi tris</a> esque habitant senectus et netus et malesuada.</p>
+    <div class="clear_both"></div>
+  </div>
+</div>
+<div class="clear_both"></div>
 ERB
       end
     end

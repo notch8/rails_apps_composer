@@ -1,32 +1,46 @@
 heroku_name = app_name.gsub('_','')
 
-after_everything do
-  if config['create']
-    say_wizard "Creating Heroku app '#{heroku_name}.heroku.com'"  
-    while !system("heroku create #{heroku_name}")
-      heroku_name = ask_wizard("What do you want to call your app? ")
+if config['heroku']
+  gem 'heroku'
+
+  after_everything do
+    #  if config['create']
+    #    say_wizard "Creating Heroku app '#{heroku_name}.heroku.com'"  
+    #    while !system("heroku create #{heroku_name}")
+    #      heroku_name = ask_wizard("What do you want to call your app? ")
+    #    end
+    #  end
+    
+    #  if config['staging']
+    #    staging_name = "#{heroku_name}-staging"
+    #    say_wizard "Creating staging Heroku app '#{staging_name}.heroku.com'"
+    #    while !system("heroku create #{staging_name}")
+    #      staging_name = ask_wizard("What do you want to call your staging app?")
+    #    end
+    #    git :remote => "rm heroku"
+    #    git :remote => "add production git@heroku.com:#{heroku_name}.git"
+    #    git :remote => "add staging git@heroku.com:#{staging_name}.git"
+    #    say_wizard "Created branches 'production' and 'staging' for Heroku deploy."
+    #  end
+    
+    #  unless config['domain'].blank?
+    #    run "heroku addons:add custom_domains"
+    #    run "heroku domains:add #{config['domain']}"
+    #  end
+    
+    #  git :push => "#{config['staging'] ? 'staging' : 'heroku'} master" if config['deploy']
+
+    if config['cedar']
+      say_wizard "Creating Heroku Stack - Cedar"
+      run 'heroku create --stack cedar'
+    else
+      say_wizard "Creating Heroku stack"
+      run 'heroku create'
     end
-  end
-
-  if config['staging']
-    staging_name = "#{heroku_name}-staging"
-    say_wizard "Creating staging Heroku app '#{staging_name}.heroku.com'"
-    while !system("heroku create #{staging_name}")
-      staging_name = ask_wizard("What do you want to call your staging app?")
-    end
-    git :remote => "rm heroku"
-    git :remote => "add production git@heroku.com:#{heroku_name}.git"
-    git :remote => "add staging git@heroku.com:#{staging_name}.git"
-    say_wizard "Created branches 'production' and 'staging' for Heroku deploy."
-  end
-
-  unless config['domain'].blank?
-    run "heroku addons:add custom_domains"
-    run "heroku domains:add #{config['domain']}"
-  end
-
-  git :push => "#{config['staging'] ? 'staging' : 'heroku'} master" if config['deploy']
-end
+    say_wizard "Don't Push to Heroku because it will hang"
+    #  run 'git push heroku master'
+  end # after everything
+end # if config['heroku']
 
 __END__
 
@@ -41,18 +55,25 @@ category: deployment
 tags: [provider]
 
 config:
-  - create:
-      prompt: "Automatically create appname.heroku.com?"
-      type: boolean
-  - staging:
-      prompt: "Create staging app? (appname-staging.heroku.com)"
-      type: boolean
-      if: create
-  - domain:
-      prompt: "Specify custom domain (or leave blank):"
-      type: string
-      if: create
-  - deploy:
-      prompt: "Deploy immediately?"
-      type: boolean 
-      if: create
+  -  heroku:
+       prompt: "Create app on heroku?"
+       type: boolean
+  -  cedar:
+       prompt: "use cedar stack?"
+       type: boolean
+#config:
+#  - create:
+#      prompt: "Automatically create appname.heroku.com?"
+#      type: boolean
+#  - staging:
+#      prompt: "Create staging app? (appname-staging.heroku.com)"
+#      type: boolean
+#      if: create
+#  - domain:
+#      prompt: "Specify custom domain (or leave blank):"
+#      type: string
+#      if: create
+#  - deploy:
+#      prompt: "Deploy immediately?"
+#      type: boolean 
+#      if: create

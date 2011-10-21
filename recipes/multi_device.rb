@@ -1,4 +1,5 @@
 # Application template recipe for the rails_apps_composer.
+# provides support for web, tablet, and mobile layouts.
 
 if config['layout']
   after_bundler do

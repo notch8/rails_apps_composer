@@ -323,7 +323,8 @@ SCSS
     #
     inside "app/assets/images" do
       image_dir = "/home/spinlock/RoR/rails_apps_composer/lib/3_platform_layout/assets/images/"
-      FileUtils.cp_r image_dir + "banner_large.jpg", "banner_large.jpg"
+#      FileUtils.cp_r image_dir + "banner_large.jpg", "banner_large.jpg"
+      get 'https://raw.github.com/spinlock99/rails_app_composer/lib/multi_platform/assets/images/banner_large.jpg', 'banner_large.jpg'
       FileUtils.cp_r image_dir + "banner_medium.jpg", "banner_medium.jpg"
       FileUtils.cp_r image_dir + "banner_small.jpg", "banner_small.jpg"
       FileUtils.cp_r image_dir + "logo_large.png", "logo_large.png"

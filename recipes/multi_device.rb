@@ -322,21 +322,20 @@ SCSS
     # Images
     #
     inside "app/assets/images" do
-      image_dir = "/home/spinlock/RoR/rails_apps_composer/lib/3_platform_layout/assets/images/"
-#      FileUtils.cp_r image_dir + "banner_large.jpg", "banner_large.jpg"
-      get 'https://raw.github.com/spinlock99/rails_app_composer/lib/multi_platform/assets/images/banner_large.jpg', 'banner_large.jpg'
-      FileUtils.cp_r image_dir + "banner_medium.jpg", "banner_medium.jpg"
-      FileUtils.cp_r image_dir + "banner_small.jpg", "banner_small.jpg"
-      FileUtils.cp_r image_dir + "logo_large.png", "logo_large.png"
-      FileUtils.cp_r image_dir + "logo_medium.png", "logo_medium.png"
-      FileUtils.cp_r image_dir + "logo_small.png", "logo_small.png"
-      FileUtils.cp_r image_dir + "sidebar_photo_large.jpg", "sidebar_photo_large.jpg"
-      FileUtils.cp_r image_dir + "sidebar_photo_medium.jpg", "sidebar_photo_medium.jpg"
-      FileUtils.cp_r image_dir + "sidebar_photo_small.jpg", "sidebar_photo_small.jpg"
-      FileUtils.cp_r image_dir + "mobile_link_arrow.png", "mobile_link_arrow.png"
-      FileUtils.cp_r image_dir + "page_background.jpg", "page_background.jpg"
-      FileUtils.cp_r image_dir + "ie_transparency_normal.png", "ie_transparency_normal.png"
-      FileUtils.cp_r image_dir + "ie_transparency_over.png", "ie_transparency_over.png"
+      image_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/assets/images/'
+      get image_url + 'banner_large.jpg', 'banner_large.jpg'
+      get image_url + "banner_medium.jpg", "banner_medium.jpg"
+      get image_url + "banner_small.jpg", "banner_small.jpg"
+      get image_url + "logo_large.png", "logo_large.png"
+      get image_url + "logo_medium.png", "logo_medium.png"
+      get image_url + "logo_small.png", "logo_small.png"
+      get image_url + "sidebar_photo_large.jpg", "sidebar_photo_large.jpg"
+      get image_url + "sidebar_photo_medium.jpg", "sidebar_photo_medium.jpg"
+      get image_url + "sidebar_photo_small.jpg", "sidebar_photo_small.jpg"
+      get image_url + "mobile_link_arrow.png", "mobile_link_arrow.png"
+      get image_url + "page_background.jpg", "page_background.jpg"
+      get image_url + "ie_transparency_normal.png", "ie_transparency_normal.png"
+      get image_url + "ie_transparency_over.png", "ie_transparency_over.png"
     end
     #
     # app/views/layouts

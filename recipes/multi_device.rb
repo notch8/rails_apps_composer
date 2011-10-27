@@ -76,7 +76,7 @@ RUBY
     #
     inside "app/views/pages" do
       remove_file 'home.html.erb'
-      get views_url + 'home/index.html.erb', 'home.html.erb'
+      get views_url + 'pages/home.html.erb', 'home.html.erb'
     end # app/views/home
   end # after_bundler
 end # if config['layout']
@@ -88,8 +88,6 @@ description: "Example website that supports browsers, tablets, and smartphones u
 author: Andrew Dixon
 
 category: assets
-requires: [home_page]
-run_after: [home_page]
 
 config:
   - layout:

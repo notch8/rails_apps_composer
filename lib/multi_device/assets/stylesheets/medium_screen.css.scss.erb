@@ -1,0 +1,39 @@
+/* Medium Screen Rules */
+
+@media screen and (min-width: 501px) and (max-width: 800px) {
+    .page {
+        margin: 0px; padding: 0px; font-size: 1.15em;
+    
+        header {
+            height: 90px;
+            padding: 10px 50px 0px 75px;
+            background-image: url(<%= asset_path 'banner_medium.jpg' %>);
+
+            a.logo {
+                top: 20px;
+                left: 25px;
+                width: 90px;
+                height: 55px;
+                background: url(<%= asset_path "logo_medium.png" %>) no-repeat 0px 0px;
+            }
+        } //header
+
+        nav { top: 30px;
+            a {
+                border-color: #fff;
+                margin-left: 10px;
+                padding: 5px 10px 5px 10px;
+                font-size: .9em;
+            }
+        } // nav
+
+        .content_sidebar figure {
+            .figure_photo {
+                height: 150px;
+                background-image: url(<%= asset_path 'sidebar_photo_medium.jpg' %>);
+            }
+
+            figcaption { font-size: .8em; }
+        } // .content_sidebar figure
+    } // .page
+} // @media                                                                

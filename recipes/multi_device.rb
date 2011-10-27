@@ -2,6 +2,9 @@
 # provides support for web, tablet, and mobile layouts.
 
 if config['layout']
+  # github repo to pull from.
+  assets_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/assets/'
+
   after_bundler do
     #
     # Stylesheets
@@ -9,39 +12,8 @@ if config['layout']
     # Download
     inside "app/assets/stylesheets" do
       # shared mixin and variables
-      create_file "shared.css.scss" do
-<<-SCSS
-@mixin rounded-corners {
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-}
-
-@mixin rounded-top {
-  -webkit-border-top-left-radius: 10px;
-  -webkit-border-top-right-radius: 10px;
-  -moz-border-radius-topleft: 10px;
-  -moz-border-radius-topright: 10px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-}
-
-@mixin rounded-bottom {
-    -webkit-border-bottom-left-radius: 10px;
-    -moz-border-radius-bottomleft: 10px;
-    border-bottom-left-radius: 10px;
-    -moz-border-radius-bottomright: 10px;
-    -webkit-border-bottom-right-radius: 10px;
-    border-bottom-right-radius: 10px;
-}
-
-@mixin box-shadow {
-  -moz-box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
-  -webkit-box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
-  box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
-}
-SCSS
-      end # shared.css.scss
+      get assets_url + 'stylesheets/shared.css.scss', 'shared.css.scss'
+    end # shared.css.scss
       # text fonts and sizes
       create_file "text.css.scss.erb" do
 <<-SCSS
@@ -439,6 +411,8 @@ description: "Example website that supports browsers, tablets, and smartphones u
 author: Andrew Dixon
 
 category: assets
+requires: [home_page]
+run_after: [home_page]
 
 config:
   - layout:

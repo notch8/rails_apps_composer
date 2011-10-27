@@ -1,0 +1,99 @@
+@import "shared";
+
+/* Layout */
+
+.page { 
+  position: relative; 
+  margin: 0px auto 0px auto; 
+  max-width: 980px; 
+
+  header {
+    display: block;
+    position: relative;
+    height: 175px;
+    @include rounded-top;
+    background: url(<%= asset_path 'banner_large.jpg' %>) no-repeat 0px 0px;
+        
+    a.logo {
+      position: absolute;
+      top: 45px;
+      left: 45px;
+      display: block;
+      width: 180px;
+      height: 105px;
+      background: url(<%= asset_path "logo_large.png" %>) no-repeat 0px 0px;
+    }
+  }
+
+  .page_content { 
+    background-color: #fff; 
+    padding: 1px 0px 1px 0px; 
+
+    .page_content_container_left { 
+      width: 70%; 
+      float: left; 
+      margin: 0px; 
+      padding: 0px; 
+    }
+
+    .page_content_container_right { 
+      width: 30%; 
+      float: left; 
+      margin: 0px; 
+      padding: 0px; 
+    }
+
+    .content {
+      margin: 15px 20px 20px 20px;
+      padding: 0px;
+    }
+
+    .content_sidebar {
+      margin: 15px 20px 20px 0px;
+      padding: 10px;
+      border: 1px solid #bdbdbd;
+      @include rounded-corners;
+      background: #f1f1f1;
+    }
+  }
+
+  nav { 
+    position: absolute; 
+    top: 77px; 
+    right: 20px; 
+    text-align: right; 
+    border: none; 
+
+    a {
+      border: 1px solid #fff;
+      @include rounded-corners;
+      color: #fff;
+      padding: 7px 20px 7px 20px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin: 0px 2px 4px 2px;
+      background-color: rgba(0,0,0,.6);	
+      font-size: 1.15em;
+    
+      &:hover { 
+        background-color: rgba(44,80,117,.7); 
+        color: #fff; 
+      }
+    }
+  }
+
+  footer {
+    display: block;
+    border-top: 1px solid #ddd;
+    padding: 15px 10px 15px 20px;
+    font-size: .9em;
+    color: #757575;
+    background-color: #fff;
+    @include box-shadow;
+    background: -moz-linear-gradient(top, #ffffff 60%, #cccccc 90%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(60%,#ffffff), color-stop(90%,#cccccc));
+  }
+}
+
+.clear_both { clear: both; line-height: 1px; }

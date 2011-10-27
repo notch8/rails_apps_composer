@@ -2,9 +2,11 @@
 # provides support for web, tablet, and mobile layouts.
 
 # github repo to pull from.
-assets_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/app/assets/'
-image_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/app/assets/images/'
-views_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/app/views/'
+github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/'
+assets_url = github_url + 'lib/multi_device/app/assets/'
+stylesheets_url = assets_url + 'stylesheets/'
+image_url = assets_url + 'images/'
+views_url = github_url + 'lib/multi_device/app/views/'
 
 after_bundler do
   say_wizard "MultiDevice recipe running 'after bundler'"
@@ -13,16 +15,16 @@ after_bundler do
   # create pages controler and homepage
   generate(:controller, "pages home")
   # set routes
-  gsub_file 'config/routes.rb', /get \"pages\/index\"/, 'root :to => "pages#home"'
+  gsub_file 'config/routes.rb', /get \"pages\/home\"/, 'root :to => "pages#home"'
   #
   # Stylesheets
   #
   inside "app/assets/stylesheets" do
-    get assets_url + 'stylesheets/shared.css.scss', 'shared.css.scss'
-    get assets_url + 'stylesheets/text.css.scss.erb', 'text.css.scss.erb'
-    get assets_url + 'stylesheets/layout.css.scss.erb', 'layout.css.scss.erb'
-    get assets_url + 'stylesheets/small_screen.css.scss.erb', 'small_screen.css.scss.erb'
-    get assets_url + 'stylesheets/medium_screen.css.scss.erb', 'medium_screen.scc.scss.erb'
+    get stylesheets_url + 'shared.css.scss', 'shared.css.scss'
+    get stylesheets_url + 'text.css.scss.erb', 'text.css.scss.erb'
+    get stylesheets_url + 'layout.css.scss.erb', 'layout.css.scss.erb'
+    get stylesheets_url + 'small_screen.css.scss.erb', 'small_screen.css.scss.erb'
+    get stylesheets_url + 'medium_screen.css.scss.erb', 'medium_screen.scc.scss.erb'
   end 
   #
   # Images

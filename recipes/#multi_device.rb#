@@ -46,8 +46,9 @@ if config['layout']
     #
     inside "app/views/layouts" do
       # _header.html.erb
-      get views_url + ' "_header.html.erb" do
-<<-HEADER
+      remove_file "_header.html.erb"
+      create_file "_header.html.erb" do
+        <<-HEADER
 <header>
     <a class="logo" href="#"></a>
 </header>

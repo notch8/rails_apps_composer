@@ -4,29 +4,31 @@
 if config['layout']
   # github repo to pull from.
   assets_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/app/assets/'
+  image_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/app/assets/images/'
   views_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/app/views/'
 
   after_bundler do
+    say_wizard "MultiDevice recipe running 'after bundler'"
+    # remove the default homepage
+    remove_file 'public/index.html'
+    # create pages controler and homepage
+    generate(:controller, "pages home")
+    # set routes
+    gsub_file 'config/routes.rb', /get \"pages\/index\"/, 'root :to => "pages#home"'
     #
     # Stylesheets
     #
     inside "app/assets/stylesheets" do
-      # shared mixin and variables
       get assets_url + 'stylesheets/shared.css.scss', 'shared.css.scss'
-      # text fonts and sizes
       get assets_url + 'stylesheets/text.css.scss.erb', 'text.css.scss.erb'
-      # style the main blocks
       get assets_url + 'stylesheets/layout.css.scss.erb', 'layout.css.scss.erb'
-      # change layout for small screens (i.e. smart phones)
       get assets_url + 'stylesheets/small_screen.css.scss.erb', 'small_screen.css.scss.erb'
-      # change layout for medium screens (i.e. iPad)
       get assets_url + 'stylesheets/medium_screen.css.scss.erb', 'medium_screen.scc.scss.erb'
-    end # app/assets/stylesheets
+    end 
     #
     # Images
     #
     inside "app/assets/images" do
-      image_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/multi_device/assets/images/'
       get image_url + 'banner_large.jpg', 'banner_large.jpg'
       get image_url + "banner_medium.jpg", "banner_medium.jpg"
       get image_url + "banner_small.jpg", "banner_small.jpg"
@@ -45,14 +47,10 @@ if config['layout']
     # app/views/layouts
     #
     inside "app/views/layouts" do
-      # _header.html.erb
-      get views_url + ' "_header.html.erb" do
-<<-HEADER
-<header>
-    <a class="logo" href="#"></a>
-</header>
-HEADER
-      end # create_file "_header.html.erb"
+      get views_url + 'layouts/_header.html.erb', '_header.html.erb'
+      get views_url + 'layouts/_nav.html.erb', '_nav.html.erb'
+      get views_url + 'layouts/_footer.html.erb', '_footer.html.erb'
+      
       # application.html.erb
       inject_into_file 'application.html.erb', :after => "<body>" do
 <<-RUBY
@@ -72,62 +70,13 @@ RUBY
 <%= debug params if Rails.env.development? %>      
 RUBY
       end # gsub_file 'application.html.erb'
-      # _nav.html.erb      
-      remove_file "_nav.html.erb"
-      create_file "_nav.html.erb" do
-<<-HTMLERB
-<nav>
-  <a href="#">Who We Are</a>
-  <a href="#">What We Do</a>
-  <a href="#">About Us</a>
-</nav>  
-HTMLERB
-      end # create_file _nav.html.erb
-      # _footer.html.erb
-      remove_file "_footer.html.erb"
-      create_file "_footer.html.erb" do
-<<-RUBY
-<footer>
-  &copy; 2011 &bull; Atomic Broadcast
-</footer>   
-RUBY
-      end # create_file _footer.html.erb
     end # app/views/layouts
     #
     # index.html.erb
     #
-    inside "app/views/home" do
-      remove_file "index.html.erb"
-      create_file "index.html.erb" do
-<<-ERB
-<div class="page_content_container_left">
-  <div class="content">
-    <h1>Heading H1</h1>
-    <p>Suspendisse vestibulum dignissim quam. Phasellus nulla purus interdum ac venenatis non varius rutrum leo. Pellentesque habitant morbi tristique senectus et netus et malesuada.</p>
-    <h2>Heading H2</h2>
-    <p>Fusce magna mi, porttitor quis, convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
-    <ul>
-      <li>Integer vel augue. <a href="#">Phasellus nulla purus</a>, interdum ac venenatis non varius rutrum leo.</li>
-      <li>Suspendisse vestibulum dignissim quam.</li>
-    </ul>
-    <p>Phasellus nulla purus, interdum ac, venenatis non convallis eget <a href="#">sodales ac</a> urna. Phasellus luctus venenatis magna. Vivamus eget lacus. Nunc tincidunt convallis tortor.</p>
-  </div>
-</div>
-<div class="page_content_container_right">
-  <div class="content_sidebar">
-    <h3>Heading H3</h3>
-    <figure>
-      <div class="figure_photo"></div>
-      <figcaption>Duis a eros lit ora tor quent per conu bia nos tra per.</figcaption>
-      <div class="clear_both"></div>
-    </figure>
-    <p>Integer vel augue phas ellus nul la purus inte rdum enatis fames ac turpis egestas.</p>
-    <p>Pellent <a href="#">morbi tris</a> esque habitant senectus et netus et malesuada.</p>
-    <div class="clear_both"></div>
-  </div>
-</div>
-<div class="clear_both"></div>
-ERB
+    inside "app/views/pages" do
+      remove_file 'home.html.erb'
+      get views_url + 'home/index.html.erb', 'home.html.erb'
     end # app/views/home
   end # after_bundler
 end # if config['layout']

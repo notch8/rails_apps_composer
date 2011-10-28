@@ -54,6 +54,8 @@ after_bundler do
     get views_url + 'layouts/_footer.html.erb', '_footer.html.erb'
     
     # application.html.erb
+    inject_into_file 'application.html.erb', ' | <%= @title %>' , :before => "</title>" 
+
     inject_into_file 'application.html.erb', :after => "<body>" do
       <<-RUBY
 
@@ -80,6 +82,17 @@ RUBY
     remove_file 'home.html.erb'
     get views_url + 'pages/home.html.erb', 'home.html.erb'
   end # app/views/home
+  #
+  # views specs
+  #
+  inside 'spec/views/pages' do
+    remove_file 'home.html.erb_spec.rb'
+    get github_url + 'lib/multi_device/spec/views/pages/home.html.erb_spec.rb'
+#    inject_into_file 'home.html.erb_spec.rb', 'render_views', :after => "require 'spec_helper'\n"
+#    gsub_file( 'home.html.erb_spec.rb', 
+#               'pending "add some examples to (or delete) #{__FILE__}"', 
+#               'it.should have_selector("title")')
+  end # spec/views/pages
 end # after_bundler
 
 __END__

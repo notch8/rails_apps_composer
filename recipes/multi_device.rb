@@ -3,6 +3,7 @@
 
 # github repo to pull from.
 github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/'
+# other variables for url shortcuts
 assets_url = github_url + 'lib/multi_device/app/assets/'
 stylesheets_url = assets_url + 'stylesheets/'
 image_url = assets_url + 'images/'
@@ -13,7 +14,7 @@ after_bundler do
   # remove the default homepage
   remove_file 'public/index.html'
   # create pages controler and homepage
-  generate(:controller, "pages home")
+  generate(:controller, "pages home about contact")
   # set routes
   gsub_file 'config/routes.rb', /get \"pages\/home\"/, 'root :to => "pages#home"'
   #
@@ -83,9 +84,11 @@ end # after_bundler
 
 __END__
 
-name: PlatformLayout
+name: MultiDevice
 description: "Example website that supports browsers, tablets, and smartphones using CSS."
 author: Andrew Dixon
 
 category: other
+requires: [rspec]
+run_after: [rspec]
 

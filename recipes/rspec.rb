@@ -30,6 +30,9 @@ if config['rspec']
       # use the factory_girl gem for test fixtures
       gem 'factory_girl_rails', '>= 1.2.0', :group => :test
     end
+    if config['webrat']
+      gem 'webrat', '>= 0.7', :group => :test
+    end
   end
 else
   recipes.delete('rspec')
@@ -55,7 +58,11 @@ if config['rspec']
 
 RUBY
     end
+    
+    if config['webrat']
+      inject_into_file 'spec/spec_helper.rb', "require 'webrat'", :before => "require 'rspec/autorun'\n"
 
+    end
 
     if recipes.include? 'mongoid'
 
@@ -126,3 +133,6 @@ config:
   - factory_girl:
       type: boolean
       prompt: Would you like to use factory_girl for test fixtures with RSpec?
+  - webrat:
+      type: boolean
+      prompt: Would you like to use webrat to simulate a browser for testing?

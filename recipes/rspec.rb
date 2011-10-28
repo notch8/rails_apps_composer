@@ -63,10 +63,12 @@ RUBY
       inject_into_file 'spec/spec_helper.rb', "require 'webrat'", :before => "require 'rspec/autorun'\n"
 
       inject_into_file 'spec/spec_helper.rb', :after => "config.mock_with :rspec" do
-<<-RSPEC
+<<-RUBY
+
   # Webrat
   config.include Webrat::Matchers, :type => :views
-RSPEC      
+
+RUBY
       end
     end
 

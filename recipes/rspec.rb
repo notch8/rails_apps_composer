@@ -66,7 +66,7 @@ RUBY
 <<-RSPEC
   # Webrat
   config.include Webrat::Matchers, :type => :views
-RPEC      
+RSPEC      
       end
     end
 

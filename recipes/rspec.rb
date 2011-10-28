@@ -62,6 +62,12 @@ RUBY
     if config['webrat']
       inject_into_file 'spec/spec_helper.rb', "require 'webrat'", :before => "require 'rspec/autorun'\n"
 
+      inject_into_file 'spec/spec_helper.rb', :after => "config.mock_with :rspec" do
+<<-RSPEC
+  # Webrat
+  config.include Webrat::Matchers, :type => :views
+RPEC      
+      end
     end
 
     if recipes.include? 'mongoid'

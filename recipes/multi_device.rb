@@ -88,10 +88,12 @@ RUBY
   inside 'spec/views/pages' do
     remove_file 'home.html.erb_spec.rb'
     get github_url + 'lib/multi_device/spec/views/pages/home.html.erb_spec.rb'
-#    inject_into_file 'home.html.erb_spec.rb', 'render_views', :after => "require 'spec_helper'\n"
-#    gsub_file( 'home.html.erb_spec.rb', 
-#               'pending "add some examples to (or delete) #{__FILE__}"', 
-#               'it.should have_selector("title")')
+
+    remove_file 'about.html.erb_spec.rb'
+    get github_url + 'lib/multi_device/spec/views/pages/about.html.erb_spec.rb'
+
+    remove_file 'contact.html.erb_spec.rb'
+    get github_url + 'lib/multi_device/spec/views/pages/contact.html.erb_spec.rb'
   end # spec/views/pages
 end # after_bundler
 

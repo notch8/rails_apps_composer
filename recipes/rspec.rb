@@ -60,7 +60,7 @@ RUBY
     end
     
     if config['webrat']
-      inject_into_file 'spec/spec_helper.rb', "require 'webrat'", :before => "require 'rspec/autorun'\n"
+      inject_into_file 'spec/spec_helper.rb', "require 'webrat'", :after => "require 'rspec/autorun'\n"
 
       inject_into_file 'spec/spec_helper.rb', :after => "config.mock_with :rspec" do
 <<-RUBY

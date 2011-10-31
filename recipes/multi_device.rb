@@ -17,6 +17,8 @@ after_bundler do
   generate(:controller, "pages home about contact")
   # set routes
   gsub_file 'config/routes.rb', /get \"pages\/home\"/, 'root :to => "pages#home"'
+  gsub_file 'config/routes.rb', /get \"pages\/about\"/, 'match "/about" :to => "pages#about"'
+  gsub_file 'config/routes.rb', /get \"pages\/contact\"/, 'match "/contact" :to => "pages#contact"'
   #
   # Stylesheets
   #
@@ -95,9 +97,14 @@ RUBY
     remove_file 'contact.html.erb_spec.rb'
     get github_url + 'lib/multi_device/spec/views/pages/contact.html.erb_spec.rb'
   end # spec/views/pages
-
+  #
+  # integration specs
+  #
   generate(:integration_test, "navigation --webrat")
-
+  inside 'spec/views/requests' do
+    remove_file 'navigations_spec.rb'
+    get github_url + 'lib/multi_device/spec/requests/navigations_spec.rb'
+  end # spec/views/requests
 end # after_bundler
 
 __END__

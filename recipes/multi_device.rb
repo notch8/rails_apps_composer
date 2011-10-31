@@ -20,6 +20,12 @@ after_everything do
   gsub_file 'config/routes.rb', /get \"pages\/home\"/, 'root :to => "pages#home"'
   gsub_file 'config/routes.rb', /get \"pages\/about\"/, 'match "/about", :to => "pages#about"'
   gsub_file 'config/routes.rb', /get \"pages\/contact\"/, 'match "/contact", :to => "pages#contact"'
+  # set @title in controller
+  inside 'app/controllers' do
+    inject_into_file 'pages_controller.rb', "\n@title = 'Home'", :after => 'def home'
+    inject_into_file 'pages_controller.rb', "\n@title = 'About'", :after => 'def about'
+    inject_into_file 'pages_controller.rb', "\n@title = 'Contact'", :after => 'def contact'
+  end
   #
   # Stylesheets
   #

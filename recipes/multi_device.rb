@@ -9,7 +9,8 @@ stylesheets_url = assets_url + 'stylesheets/'
 image_url = assets_url + 'images/'
 views_url = github_url + 'lib/multi_device/app/views/'
 
-after_bundler do
+#after_bundler do
+after_everything do
   say_wizard "MultiDevice recipe running 'after bundler'"
   # remove the default homepage
   remove_file 'public/index.html'
@@ -17,8 +18,8 @@ after_bundler do
   generate(:controller, "pages home about contact")
   # set routes
   gsub_file 'config/routes.rb', /get \"pages\/home\"/, 'root :to => "pages#home"'
-  gsub_file 'config/routes.rb', /get \"pages\/about\"/, 'match "/about" :to => "pages#about"'
-  gsub_file 'config/routes.rb', /get \"pages\/contact\"/, 'match "/contact" :to => "pages#contact"'
+  gsub_file 'config/routes.rb', /get \"pages\/about\"/, 'match "/about", :to => "pages#about"'
+  gsub_file 'config/routes.rb', /get \"pages\/contact\"/, 'match "/contact", :to => "pages#contact"'
   #
   # Stylesheets
   #
@@ -101,7 +102,7 @@ RUBY
   # integration specs
   #
   generate(:integration_test, "navigation --webrat")
-  inside 'spec/views/requests' do
+  inside 'spec/requests' do
     remove_file 'navigations_spec.rb'
     get github_url + 'lib/multi_device/spec/requests/navigations_spec.rb'
   end # spec/views/requests

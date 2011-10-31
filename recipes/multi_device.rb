@@ -95,6 +95,9 @@ RUBY
     remove_file 'contact.html.erb_spec.rb'
     get github_url + 'lib/multi_device/spec/views/pages/contact.html.erb_spec.rb'
   end # spec/views/pages
+
+  generate(:integration_test, "navigation --webrat")
+
 end # after_bundler
 
 __END__

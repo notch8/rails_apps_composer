@@ -1,7 +1,7 @@
 # github repo to pull from.                                                                                                 
 github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/'
 
-gem 'omniauth', '>= 0.3.0.rc3'
+gem 'omniauth', '~> 0.3.0.rc3'
 
 after_everything do
   inside 'config/initializers' do

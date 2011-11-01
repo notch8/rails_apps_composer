@@ -121,6 +121,6 @@ description: "Example website that supports browsers, tablets, and smartphones u
 author: Andrew Dixon
 
 category: other
-requires: [rspec]
-run_after: [rspec]
-
+requires: [devise, devise_user, git, rspec]
+run_after: [devise, devise_user, rspec]
+run_before: [git]

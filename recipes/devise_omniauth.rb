@@ -3,9 +3,9 @@ github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/'
 
 gem 'omniauth', '>= 0.3.0.rc3'
 
-after_bundler do
+after_everything do
   inside 'config/initializers' do
-    get github_url + 'devise_omniauth/config/initializers/omniauth.rb', 'omniauth.rb'
+    get github_url + 'lib/devise_omniauth/config/initializers/omniauth.rb', 'omniauth.rb'
   end # config/initializers
 end
 

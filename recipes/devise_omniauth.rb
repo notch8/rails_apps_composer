@@ -1,7 +1,7 @@
 # github repo to pull from.                                                                                                 
 github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/'
 
-gem 'omniauth', '>= 0.3.0.rc3'
+gem 'omniauth', '~> 0.3.0.rc3'
 
 after_bundler do
   #
@@ -40,13 +40,14 @@ after_bundler do
   # Authentication controller
   #
   inject_into_file("app/controllers/authentications_controller.rb", 
-                   "\nrender :text => request.env["omniauth.auth"].to_yaml", 
+                   "\nrender :text => request.env['omniauth.auth'].to_yaml", 
                    :after => "def create")
   #
   # Routes
   #
   inject_into_file "config/routes.rb", :after => "Testapp::Application.routes.draw do" do
     <<-RB
+
 match '/auth/:provider/callback' => 'authentications#create'
 resources :authentications
 RB

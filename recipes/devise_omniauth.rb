@@ -1,5 +1,5 @@
 # github repo to pull from.                                                                                                 
-github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/'
+github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/devise_omniauth/'
 
 gem 'omniauth', '~> 0.3.0.rc3'
 
@@ -10,9 +10,9 @@ after_bundler do
   #
   inside 'config/initializers' do
     begin
-      get github_url + 'lib/devise_omniauth/config/initializers/omniauth.rb', 'omniauth.rb'
+      get github_url + 'config/initializers/omniauth.rb', 'omniauth.rb'
     rescue OpenURI::HTTPError
-      say_wizard "Unable to obtain RSpec example files from the repo"
+      say_wizard "Unable to get omniauth.rb from github"
     end
   end # config/initializers
   #
@@ -25,7 +25,14 @@ after_bundler do
   # Create Authentications controller 
   #      actions: index, create and destroy
   #
-  generate :controller, 'authentications index create destroy'
+#  generate :controller, 'authentications index create destroy'
+  inside 'app/controllers' do
+    begin
+      get github_url + 'app/controllers/authentications_controller.rb', 'authentications_controller.rb'
+    rescue OpenURI::HTTPError
+      say_wizard "Unable to get authentications_controller.rb from github."
+    end
+  end # app/controllers
   #
   # User has_many Authentications
   #
@@ -36,12 +43,6 @@ after_bundler do
   # 
   inject_into_file("app/models/authentication.rb", "\nbelongs_to :user", 
                    :after => "class Authentication < ActiveRecord::Base")
-  #
-  # Authentication controller
-  #
-  inject_into_file("app/controllers/authentications_controller.rb", 
-                   "\nrender :text => request.env['omniauth.auth'].to_yaml", 
-                   :after => "def create")
   #
   # Routes
   #

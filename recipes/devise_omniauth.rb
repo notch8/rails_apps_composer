@@ -1,9 +1,11 @@
+say_wizard "devise_omniauth adding omniauth gem to Gemfile"
 # github repo to pull from.                                                                                                 
 github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/devise_omniauth/'
 
 gem 'omniauth', '~> 0.3.0.rc3'
 
 after_bundler do
+  say_wizard "devise_omniauth running after_bundler"
   #
   # Add omniauth.rb to initializers to configure 
   # authentication providers for our middleware.
@@ -59,6 +61,7 @@ __END__
 
 name: DeviseOmniAuth
 description: "Adds OmniAuth support to a Devise setup."
-author: spinlock99
+author: spinlock
 
-
+requires: [rack_bug, devise, devise_user]
+run_after: [rack_bug, devise, devise_user]

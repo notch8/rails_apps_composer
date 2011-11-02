@@ -40,13 +40,14 @@ after_bundler do
   # Authentication controller
   #
   inject_into_file("app/controllers/authentications_controller.rb", 
-                   "\nrender :text => request.env["omniauth.auth"].to_yaml", 
+                   "\nrender :text => request.env['omniauth.auth'].to_yaml", 
                    :after => "def create")
   #
   # Routes
   #
   inject_into_file "config/routes.rb", :after => "Testapp::Application.routes.draw do" do
     <<-RB
+
 match '/auth/:provider/callback' => 'authentications#create'
 resources :authentications
 RB

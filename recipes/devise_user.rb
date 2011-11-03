@@ -77,7 +77,8 @@ ERB
   #
   # Add tests for devise user
   #
-      get 'https://raw.github.com/RailsApps/rails3-devise-rspec-cucumber/master/spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
+  remove_file 'spec/controllers/users_controller_spec.rb'
+  get 'https://raw.github.com/RailsApps/rails3-devise-rspec-cucumber/master/spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
 end
 
 __END__

@@ -3,7 +3,7 @@ after_bundler do
   #
   # Create model and routes
   #
-  generate 'devise user'
+  generate 'devise user --no-view-specs --no-helper-specs'
   generate 'migration AddNameToUsers name:string'
   gsub_file 'app/models/user.rb', /attr_accessible :email/, 'attr_accessible :name, :email'
   inject_into_file 'app/models/user.rb', :before => 'validates_uniqueness_of' do
@@ -13,7 +13,7 @@ after_bundler do
   #
   # Generate Devise Views
   #
-  run 'rails generate devise:views'
+  run 'rails generate devise:views --no-view-specs --no-helper-specs'
   inject_into_file "app/views/devise/registrations/edit.html.erb", :after => "<%= devise_error_messages! %>\n" do
     <<-ERB
 <p><%= f.label :name %><br />
@@ -29,7 +29,7 @@ ERB
   #
   # Create a users controller
   #
-  generate(:controller, 'users show')
+  generate(:controller, 'users show --no-view-specs --no-helper-specs')
   gsub_file 'app/controllers/users_controller.rb', /def show/ do
     <<-RUBY
 before_filter :authenticate_user!
@@ -74,6 +74,10 @@ ERB
 
 ERB
   end
+  #
+  # Add tests for devise user
+  #
+      get 'https://raw.github.com/RailsApps/rails3-devise-rspec-cucumber/master/spec/controllers/users_controller_spec.rb', 'spec/controllers/users_controller_spec.rb'
 end
 
 __END__
@@ -83,5 +87,6 @@ name: DeviseUser
 description: Installs a user for Devise
 author: spinlock99
 
-requires: [pages, devise]
-run_after: [pages, devise]
+requires: [pages, devise, rspec]
+run_after: [pages, devise, rspec]
+

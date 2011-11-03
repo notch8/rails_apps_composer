@@ -5,7 +5,7 @@ after_bundler do
   # remove the default homepage
   remove_file 'public/index.html'
   # create pages controler and homepage
-  generate(:controller, "pages home about contact")
+  generate(:controller, "pages home about contact --no-view-specs --no-helper-specs")
   # set routes
   gsub_file 'config/routes.rb', /get \"pages\/home\"/, 'root :to => "pages#home"'
   gsub_file 'config/routes.rb', /get \"pages\/about\"/, 'match "/about", :to => "pages#about"'

@@ -12,20 +12,6 @@ views_url = github_url + 'lib/multi_device/app/views/'
 #after_bundler do
 after_everything do
   say_wizard "MultiDevice recipe running 'after bundler'"
-  # remove the default homepage
-  remove_file 'public/index.html'
-  # create pages controler and homepage
-  generate(:controller, "pages home about contact")
-  # set routes
-  gsub_file 'config/routes.rb', /get \"pages\/home\"/, 'root :to => "pages#home"'
-  gsub_file 'config/routes.rb', /get \"pages\/about\"/, 'match "/about", :to => "pages#about"'
-  gsub_file 'config/routes.rb', /get \"pages\/contact\"/, 'match "/contact", :to => "pages#contact"'
-  # set @title in controller
-  inside 'app/controllers' do
-    inject_into_file 'pages_controller.rb', "\n@title = 'Home'", :after => 'def home'
-    inject_into_file 'pages_controller.rb', "\n@title = 'About'", :after => 'def about'
-    inject_into_file 'pages_controller.rb', "\n@title = 'Contact'", :after => 'def contact'
-  end
   #
   # Stylesheets
   #
@@ -121,6 +107,6 @@ description: "Example website that supports browsers, tablets, and smartphones u
 author: Andrew Dixon
 
 category: other
-requires: [devise, devise_user, devise_omniauth, git, rspec]
-run_after: [devise, devise_user, devise_omniauth, rspec]
+requires: [pages, devise, devise_user, devise_omniauth, git, rspec]
+run_after: [pages, devise, devise_user, devise_omniauth, rspec]
 run_before: [git]

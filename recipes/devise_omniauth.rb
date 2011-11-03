@@ -1,6 +1,6 @@
-say_wizard "devise_omniauth adding omniauth gem to Gemfile"
 # github repo to pull from.                                                                                                 
 github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/devise_omniauth/'
+lib_devise_omniauth = '/home/spinlock/RoR/rails_apps_composer/lib/devise_omniauth/'
 
 gem 'omniauth', '~> 0.3.0.rc3'
 
@@ -11,11 +11,7 @@ after_bundler do
   # authentication providers for our middleware.
   #
   inside 'config/initializers' do
-    begin
-      get github_url + 'config/initializers/omniauth.rb', 'omniauth.rb'
-    rescue OpenURI::HTTPError
-      say_wizard "Unable to get omniauth.rb from github"
-    end
+    get lib_devise_omniauth + 'config/initializers/omniauth.rb', 'omniauth.rb'
   end # config/initializers
   #
   # Create Authentications model so that users
@@ -29,11 +25,7 @@ after_bundler do
   #
 #  generate :controller, 'authentications index create destroy'
   inside 'app/controllers' do
-    begin
-      get github_url + 'app/controllers/authentications_controller.rb', 'authentications_controller.rb'
-    rescue OpenURI::HTTPError
-      say_wizard "Unable to get authentications_controller.rb from github."
-    end
+    get lib_devise_omniauth + 'app/controllers/authentications_controller.rb', 'authentications_controller.rb'
   end # app/controllers
   #
   # User has_many Authentications

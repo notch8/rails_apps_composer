@@ -57,6 +57,23 @@ RUBY
 <p>Email: <%= @user.email if @user.email %></p>
 ERB
   end
+
+  #
+  # Add sign up, sign in, and sign out links to home page
+  #
+  prepend_file 'app/views/pages/home.html.erb' do 
+<<-ERB
+<p> 
+  <%= link_to "Sign Up", new_user_registration_path %>
+  <%= link_to "Sign In", new_user_session_path %>
+  <%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>
+</p>
+<% if current_user %>
+  <p>signed in as: <%= current_user.name %>
+<% end %> 
+
+ERB
+  end
 end
 
 __END__
@@ -65,3 +82,6 @@ category: other
 name: DeviseUser
 description: Installs a user for Devise
 author: spinlock99
+
+requires: [pages, devise]
+run_after: [pages, devise]

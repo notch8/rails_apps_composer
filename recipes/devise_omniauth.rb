@@ -52,6 +52,6 @@ name: DeviseOmniAuth
 description: "Adds OmniAuth support to a Devise setup."
 author: spinlock
 
-requires: [rack_bug, pages, devise, devise_user, migrate_db]
+requires: [rack_bug, pages, devise, devise_user, migrate_db, run_tests]
 run_after: [rack_bug, pages, devise, devise_user]
-run_before: [migrate_db]
+run_before: [migrate_db, run_tests]

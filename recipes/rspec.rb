@@ -1,7 +1,6 @@
 # Application template recipe for the rails_apps_composer. Check for a newer version here:
 # https://github.com/RailsApps/rails_apps_composer/blob/master/recipes/rspec.rb
 
-if config['rspec']
   if recipes.include? 'rails 3.0'
     # for Rails 3.0, use only gem versions we know that work
     say_wizard "REMINDER: When creating a Rails app using RSpec..."
@@ -26,21 +25,13 @@ if config['rspec']
       # include RSpec matchers from the mongoid-rspec gem
       gem 'mongoid-rspec', '>= 1.4.4', :group => :test
     end
-    if config['factory_girl']
       # use the factory_girl gem for test fixtures
       gem 'factory_girl_rails', '>= 1.2.0', :group => :test
-    end
-    if config['webrat']
       gem 'webrat', '>= 0.7', :group => :test
-    end
   end
-else
-  recipes.delete('rspec')
-end
 
 # note: there is no need to specify the RSpec generator in the config/application.rb file
 
-if config['rspec']
   after_bundler do
     say_wizard "RSpec recipe running 'after bundler'"
     generate 'rspec:install'
@@ -59,17 +50,15 @@ if config['rspec']
 RUBY
     end
     
-    if config['webrat']
-      inject_into_file 'spec/spec_helper.rb', "require 'webrat'\n", :after => "require 'rspec/autorun'\n"
+    inject_into_file 'spec/spec_helper.rb', "require 'webrat'\n", :after => "require 'rspec/autorun'\n"
 
-      inject_into_file 'spec/spec_helper.rb', :after => "config.mock_with :rspec" do
+    inject_into_file 'spec/spec_helper.rb', :after => "config.mock_with :rspec" do
 <<-RUBY
 
   # Webrat
   config.include Webrat::Matchers, :type => :views
 
 RUBY
-      end
     end
 
     if recipes.include? 'mongoid'
@@ -109,7 +98,6 @@ RUBY
       end
     end
 
-    if recipes.include? 'devise'
       # add Devise test helpers
       create_file 'spec/support/devise.rb' do 
       <<-RUBY
@@ -117,11 +105,9 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
 end
 RUBY
-      end
     end
 
   end
-end
 
 __END__
 
@@ -134,13 +120,3 @@ category: testing
 
 args: ["-T"]
 
-config:
-  - rspec:
-      type: boolean
-      prompt: Would you like to use RSpec instead of TestUnit?
-  - factory_girl:
-      type: boolean
-      prompt: Would you like to use factory_girl for test fixtures with RSpec?
-  - webrat:
-      type: boolean
-      prompt: Would you like to use webrat to simulate a browser for testing?

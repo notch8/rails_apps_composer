@@ -1,5 +1,3 @@
-# github repo to pull from.                                                                                                 
-github_url = 'https://github.com/spinlock99/rails_apps_composer/raw/master/lib/devise_omniauth/'
 lib_devise_omniauth = '/home/spinlock/RoR/rails_apps_composer/lib/devise_omniauth/'
 
 gem 'omniauth', '~> 0.3.0.rc3'
@@ -23,7 +21,6 @@ after_bundler do
   # Create Authentications controller 
   #      actions: index, create and destroy
   #
-#  generate :controller, 'authentications index create destroy'
   inside 'app/controllers' do
     get lib_devise_omniauth + 'app/controllers/authentications_controller.rb', 'authentications_controller.rb'
   end # app/controllers

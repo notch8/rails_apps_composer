@@ -62,7 +62,7 @@ after_bundler do
   # pages#home should show authentications
   # 
   # modify pages controller
-  inject_into_file("app/controller/pages_controller.rb", 
+  inject_into_file("app/controllers/pages_controller.rb", 
                    "\n    @authentications = current_user.authentications if current_user", 
                    :after => "@title = 'Home'")
   # modify pages/home.html.erb
@@ -87,6 +87,6 @@ name: DeviseOmniAuth
 description: "Adds OmniAuth support to a Devise setup."
 author: spinlock
 
-requires: [rack_bug, pages, devise, devise_user, git, migrate_db, run_tests]
+requires: [rack_bug, pages, devise, devise_user, migrate_db, git, run_tests]
 run_after: [rack_bug, pages, devise, devise_user]
-run_before: [git, migrate_db, run_tests]
+run_before: [migrate_db, git, run_tests]

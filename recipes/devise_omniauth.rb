@@ -21,9 +21,33 @@ after_bundler do
   # Create Authentications controller 
   #      actions: index, create and destroy
   #
+  generate :controller, 'index create destroy'
   inside 'app/controllers' do
+    remove_file 'authentications_controller.rb'
     get lib_devise_omniauth + 'app/controllers/authentications_controller.rb', 'authentications_controller.rb'
   end # app/controllers
+  #
+  # Views
+  #
+  inside 'app/views/authentications' do
+    remove_file 'index.html.erb'
+    get lib_devise_omniauth + 'app/views/authentications/index.html.erb', 'index.html.erb'
+  end # app/views/authentications
+  #
+  # Stylesheets
+  #
+  inside 'app/assets/stylesheets' do
+    get lib_devise_omniauth + 'app/assets/stylesheets/authentications.css.scss', 'authentications.css.scss'
+  end # app/assets/stylesheets
+  #
+  # Images
+  #
+  inside 'app/assets/images' do
+    get lib_devise_omniauth + 'app/assets/images/facebook_64.png', 'facebook_64.png'
+    get lib_devise_omniauth + 'app/assets/images/linked_in_64.png', 'linked_in_64.png'
+    get lib_devise_omniauth + 'app/assets/images/twitter_64.png','twitter_64.png'
+    get lib_devise_omniauth + 'app/assets/images/linked_in_32.png','linked_in_32.png'
+  end
   #
   # User has_many Authentications
   #
@@ -37,11 +61,11 @@ after_bundler do
   #
   # Routes
   #
-  inject_into_file "config/routes.rb", :after => "Testapp::Application.routes.draw do" do
+  inject_into_file "config/routes.rb", :after => "::Application.routes.draw do" do
     <<-RB
 
-match '/auth/:provider/callback' => 'authentications#create'
-resources :authentications
+  match '/auth/:provider/callback' => 'authentications#create'
+  resources :authentications
 RB
   end
 end

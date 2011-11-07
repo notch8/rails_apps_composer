@@ -19,9 +19,9 @@ after_bundler do
   generate :model, 'authentication user_id:integer provider:string uid:string'
   #
   # Create Authentications controller 
-  #      actions: index, create and destroy
+  #      actions: create and destroy
   #
-  generate :controller, 'index create destroy'
+  generate :controller, 'create destroy'
   inside 'app/controllers' do
     remove_file 'authentications_controller.rb'
     get lib_devise_omniauth + 'app/controllers/authentications_controller.rb', 'authentications_controller.rb'
@@ -29,9 +29,9 @@ after_bundler do
   #
   # Views
   #
-  inside 'app/views/authentications' do
-    remove_file 'index.html.erb'
-    get lib_devise_omniauth + 'app/views/authentications/index.html.erb', 'index.html.erb'
+  inside 'app/views/shared' do
+    remove_file '_authentications.html.erb'
+    get lib_devise_omniauth + 'app/views/shared/_authentications.html.erb', '_authentications.html.erb'
   end # app/views/authentications
   #
   # Stylesheets
@@ -58,6 +58,17 @@ after_bundler do
   # 
   inject_into_file("app/models/authentication.rb", "\nbelongs_to :user", 
                    :after => "class Authentication < ActiveRecord::Base")
+  #
+  # pages#home should show authentications
+  # 
+  # modify pages controller
+  inject_into_file("app/controller/pages_controller.rb", 
+                   "\n    @authentications = current_user.authentications if current_user", 
+                   :after => "@title = 'Home'")
+  # modify pages/home.html.erb
+  inject_into_file("app/views/pages/home.html.erb",
+                   "<%= render 'shared/authentications' %>\n",
+                   :before => "<h1>Pages#home</h1>")
   #
   # Routes
   #

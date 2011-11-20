@@ -51,13 +51,35 @@ after_bundler do
   #
   # User has_many Authentications
   #
-  inject_into_file("app/models/user.rb", "\nhas_many :authentications", 
+  inject_into_file("app/models/user.rb", "\n  has_many :authentications", 
                    :after => "class User < ActiveRecord::Base")
   #
   # Authentication belongs to User
   # 
-  inject_into_file("app/models/authentication.rb", "\nbelongs_to :user", 
+  inject_into_file("app/models/authentication.rb", "\n  belongs_to :user", 
                    :after => "class Authentication < ActiveRecord::Base")
+  #
+  # build_authentication(omniauth)
+  #
+  inject_into_file "app/models/user.rb", :before => "protected" do
+<<-RB
+  # Build an Authentication record for the user based on the                                                                 
+  # provider and uid information gleaned by omniauth.                                                                        
+  def build_authentication(omniauth)
+    logger.debug "\n\t build_authentication(omniauth) \n\n"
+    # now put the authentication in the database                                                                             
+    authentications.build(:provider => omniauth['provider'],
+                          :uid => omniauth['uid'],
+                          :token => omniauth['credentials']['token'],
+                          :secret => omniauth['credentials']['secret'])
+    # If the provider is Linked in, get additional information                                                               
+    # to build a user profile.                                                                                               
+    if omniauth['provider'] == 'linked_in'
+      self.build_linkedin(omniauth)
+    end
+  end
+RB
+  end
   #
   # pages#home should show authentications
   # 

@@ -11,6 +11,10 @@ after_bundler do
   end
   gsub_file 'app/models/user.rb', /validates_uniqueness_of :email/, 'validates_uniqueness_of :name, :email'
   #
+  # add area for protected methonds
+  #
+  inject_into_file( "app/models/user.rb", "\n  protected\n", :before => "end" )
+  #
   # Generate Devise Views
   #
   run 'rails generate devise:views --no-view-specs --no-helper-specs'

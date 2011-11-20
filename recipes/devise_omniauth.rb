@@ -73,8 +73,8 @@ after_bundler do
   # Routes
   #
   inject_into_file("config/routes.rb", 
-                   :after => "devise_for :users", 
-                   ", :controllers => {:registrations => 'registrations'}")
+                   ", :controllers => {:registrations => 'registrations'}",
+                   :after => "devise_for :users")
   inject_into_file "config/routes.rb", :after => "::Application.routes.draw do" do
     <<-RB
 

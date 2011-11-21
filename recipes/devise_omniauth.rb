@@ -1,7 +1,6 @@
 lib_devise_omniauth = '/home/spinlock/RoR/rails_apps_composer/lib/devise_omniauth/'
 
 gem 'omniauth', '~> 0.3.0.rc3'
-gem 'linkedin'
 
 after_bundler do
   say_wizard "devise_omniauth running after_bundler"
@@ -45,9 +44,7 @@ after_bundler do
   #
   inside 'app/assets/images' do
     get lib_devise_omniauth + 'app/assets/images/facebook_64.png', 'facebook_64.png'
-    get lib_devise_omniauth + 'app/assets/images/linked_in_64.png', 'linked_in_64.png'
     get lib_devise_omniauth + 'app/assets/images/twitter_64.png','twitter_64.png'
-    get lib_devise_omniauth + 'app/assets/images/linked_in_32.png','linked_in_32.png'
   end
   #
   # User has_many Authentications
@@ -72,11 +69,6 @@ after_bundler do
     # now put the authentication in the database
     authentications.build(:provider => omniauth['provider'],
                           :uid => omniauth['uid'])
-    # If the provider is Linked in, get additional information
-    # to build a user profile.
-    if omniauth['provider'] == 'linked_in'
-      self.build_linkedin(omniauth)
-    end
   end
 
 RUBY
@@ -97,11 +89,7 @@ RUBY
           "_T1VdwWitfALil_swkRRleOJMLZ-eZyKJSEYbYOV0wF_Ml34ZvxFo-qc6S7Y_fIB")
     client.authorize_from_access(omniauth['credentials']['token'],
                                  omniauth['credentials']['secret'])
-#    self.first_name = client.profile.first_name
-#    self.last_name = client.profile.last_name
     self.name = client.profile.first_name
-#    @picture_url = client.profile(:fields => %w(picture-url))
-#    self.picture_url = @picture_url.picture_url
   end
 
 RUBY

@@ -1,6 +1,7 @@
 lib_devise_omniauth = '/home/spinlock/RoR/rails_apps_composer/lib/devise_omniauth/'
 
 gem 'omniauth', '~> 0.3.0.rc3'
+gem 'linkedin'
 
 after_bundler do
   say_wizard "devise_omniauth running after_bundler"
@@ -61,24 +62,87 @@ after_bundler do
   #
   # build_authentication(omniauth)
   #
-  inject_into_file "app/models/user.rb", :before => "protected" do
-<<-RB
-  # Build an Authentication record for the user based on the                                                                 
-  # provider and uid information gleaned by omniauth.                                                                        
+  inject_into_file "app/models/user.rb", :before => '# protected methods' do
+<<-RUBY
+
+  # Build an Authentication record for the user based on the
+  # provider and uid information gleaned by omniauth.
   def build_authentication(omniauth)
-    logger.debug "\n\t build_authentication(omniauth) \n\n"
-    # now put the authentication in the database                                                                             
+    logger.debug '\n\t build_authentication(omniauth) \n\n'
+    # now put the authentication in the database
     authentications.build(:provider => omniauth['provider'],
-                          :uid => omniauth['uid'],
-                          :token => omniauth['credentials']['token'],
-                          :secret => omniauth['credentials']['secret'])
-    # If the provider is Linked in, get additional information                                                               
-    # to build a user profile.                                                                                               
+                          :uid => omniauth['uid'])
+    # If the provider is Linked in, get additional information
+    # to build a user profile.
     if omniauth['provider'] == 'linked_in'
       self.build_linkedin(omniauth)
     end
   end
-RB
+
+RUBY
+
+  end
+  #
+  # protected methods
+  #
+  #
+  # build_linkedin(omniauth)
+  #
+  inject_into_file 'app/models/user.rb', :after => '# begin protected methods' do
+<<-RUBY
+
+  def build_linkedin(omniauth)
+    client = LinkedIn::Client.new(
+          "zpfoZeTY4UFhmGZ3s23jKbJ4ZSs4r2wwb40FwjLEuntcHdi6Tfsk19F1o1BZ1SA4",
+          "_T1VdwWitfALil_swkRRleOJMLZ-eZyKJSEYbYOV0wF_Ml34ZvxFo-qc6S7Y_fIB")
+    client.authorize_from_access(omniauth['credentials']['token'],
+                                 omniauth['credentials']['secret'])
+#    self.first_name = client.profile.first_name
+#    self.last_name = client.profile.last_name
+    self.name = client.profile.first_name
+#    @picture_url = client.profile(:fields => %w(picture-url))
+#    self.picture_url = @picture_url.picture_url
+  end
+
+RUBY
+  end
+  #
+  # email_required?
+  #
+  inject_into_file 'app/models/user.rb', :after => '# begin protected methods' do
+<<-RUBY
+
+  #
+  # email_required?
+  #
+  # determines if we need an email to create a new user record.
+  # override method in devise base class so that we will not need
+  # a password if we have an authentication or the email is not
+  # blank.
+  def email_required?
+    (authentications.empty? || !email.blank?) && super
+  end
+
+RUBY
+  end
+  #
+  # password_required?
+  #
+  inject_into_file 'app/models/user.rb', :after => '# begin protected methods' do
+<<-RUBY
+
+  #
+  # password_required?
+  #
+  # determines if we need a password to create a new user record.
+  # override method in devise base class so that we will not need
+  # a password if we have an authentication or the password is not
+  # blank
+  def password_required?
+    (authentications.empty? || !password.blank?) && super
+  end
+
+RUBY
   end
   #
   # pages#home should show authentications
@@ -95,7 +159,7 @@ RB
   # Routes
   #
   inject_into_file("config/routes.rb", 
-                   ", :controllers => {:registrations => 'registrations'}",
+                 ", :controllers => {:registrations => 'registrations'}",
                    :after => "devise_for :users")
   inject_into_file "config/routes.rb", :after => "::Application.routes.draw do" do
     <<-RB

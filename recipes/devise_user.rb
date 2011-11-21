@@ -6,14 +6,21 @@ after_bundler do
   generate 'devise user --no-view-specs --no-helper-specs'
   generate 'migration AddNameToUsers name:string'
   gsub_file 'app/models/user.rb', /attr_accessible :email/, 'attr_accessible :name, :email'
-  inject_into_file 'app/models/user.rb', :before => 'validates_uniqueness_of' do
-    "validates_presence_of :name\n"
-  end
+  inject_into_file 'app/models/user.rb',     "validates_presence_of :name\n", :before => 'validates_uniqueness_of'
   gsub_file 'app/models/user.rb', /validates_uniqueness_of :email/, 'validates_uniqueness_of :name, :email'
   #
   # add area for protected methonds
   #
-  inject_into_file( "app/models/user.rb", "\n  protected\n", :before => "end" )
+  inject_into_file "app/models/user.rb", :before => "end" do 
+<<-RUBY
+
+  # protected methods
+  protected
+  # begin protected methods
+
+RUBY
+
+  end
   #
   # Generate Devise Views
   #
@@ -36,7 +43,7 @@ ERB
   generate(:controller, 'users show --no-view-specs --no-helper-specs')
   gsub_file 'app/controllers/users_controller.rb', /def show/ do
     <<-RUBY
-before_filter :authenticate_user!
+  before_filter :authenticate_user!
 
   def show
     @user = User.find(params[:id])

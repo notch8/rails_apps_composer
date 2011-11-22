@@ -61,39 +61,19 @@ after_bundler do
   #
   inject_into_file "app/models/user.rb", :before => '# protected methods' do
 <<-RUBY
-
   # Build an Authentication record for the user based on the
   # provider and uid information gleaned by omniauth.
   def build_authentication(omniauth)
-    logger.debug '\n\t build_authentication(omniauth) \n\n'
     # now put the authentication in the database
     authentications.build(:provider => omniauth['provider'],
                           :uid => omniauth['uid'])
   end
 
 RUBY
-
   end
   #
   # protected methods
   #
-  #
-  # build_linkedin(omniauth)
-  #
-  inject_into_file 'app/models/user.rb', :after => '# begin protected methods' do
-<<-RUBY
-
-  def build_linkedin(omniauth)
-    client = LinkedIn::Client.new(
-          "zpfoZeTY4UFhmGZ3s23jKbJ4ZSs4r2wwb40FwjLEuntcHdi6Tfsk19F1o1BZ1SA4",
-          "_T1VdwWitfALil_swkRRleOJMLZ-eZyKJSEYbYOV0wF_Ml34ZvxFo-qc6S7Y_fIB")
-    client.authorize_from_access(omniauth['credentials']['token'],
-                                 omniauth['credentials']['secret'])
-    self.name = client.profile.first_name
-  end
-
-RUBY
-  end
   #
   # email_required?
   #
@@ -110,7 +90,6 @@ RUBY
   def email_required?
     (authentications.empty? || !email.blank?) && super
   end
-
 RUBY
   end
   #
@@ -129,7 +108,6 @@ RUBY
   def password_required?
     (authentications.empty? || !password.blank?) && super
   end
-
 RUBY
   end
   #

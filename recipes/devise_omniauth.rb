@@ -44,7 +44,6 @@ after_bundler do
   #
   inside 'app/assets/images' do
     get lib_devise_omniauth + 'app/assets/images/facebook_64.png', 'facebook_64.png'
-    get lib_devise_omniauth + 'app/assets/images/twitter_64.png','twitter_64.png'
   end
   #
   # User has_many Authentications

@@ -27,6 +27,16 @@ RUBY
     get lib_linkedin + 'app/assets/images/linked_in_64.png', 'linked_in_64.png'
   end
   #
+  # Add linkedin to _authentications.html.erb partial
+  #
+  inject_into_file "app/views/shared/_authentications.html.erb", :after => "<!-- authentication providers -->" do
+<<-RUBY
+
+<a href="/auth/linked_in" class="auth_provider">
+  <%= image_tag "linked_in_64.png", :size => "64x64", :alt => "LinkedIn" %>LinkedIn</a>
+RUBY
+  end
+  #
   # Add linkedIn options to build_authentication(omniauth)
   #
   inject_into_file "app/models/user.rb", :after => 'def build_authentication(omniauth)' do

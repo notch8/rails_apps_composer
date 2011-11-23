@@ -65,7 +65,9 @@ after_bundler do
   def build_authentication(omniauth)
     # now put the authentication in the database
     authentications.build(:provider => omniauth['provider'],
-                          :uid => omniauth['uid'])
+                          :uid => omniauth['uid'],
+                          :token => omniauth['credentials']['token'],
+                          :secret => omniauth['credentials']['secret'])
   end
 
 RUBY

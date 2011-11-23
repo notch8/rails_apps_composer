@@ -36,6 +36,30 @@ RUBY
     get lib_twitter + 'app/assets/images/twitter_32.png', 'twitter_32.png'
     get lib_twitter + 'app/assets/images/twitter_64.png', 'twitter_64.png'
   end # app/assets/images
+  #
+  # Add twitter options to build_authentication(omniauth)
+  #
+  inject_into_file "app/models/user.rb", :after => 'def build_authentication(omniauth)' do
+<<-RUBY
+
+    # If the provider is twitter, get additional information
+    # to build a user profile.
+    if omniauth['provider'] == 'twitter'
+      self.build_twitter(omniauth)
+    end
+RUBY
+  end
+  #
+  # build_twitter(omniauth)
+  #
+  inject_into_file 'app/models/user.rb', :after => '# begin protected methods' do
+<<-RUBY
+
+  def build_twitter(omniauth)
+    self.name = omniauth['user_info']['name']
+  end
+RUBY
+  end
 end # after_bundler
 
 __END__

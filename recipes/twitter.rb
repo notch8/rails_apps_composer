@@ -1,5 +1,7 @@
 lib_twitter = '/home/spinlock/RoR/rails_apps_composer/lib/twitter/'
 
+gem 'twitter'
+
 after_bundler do
   say_wizard "twitter running 'after_bundler'"
   #

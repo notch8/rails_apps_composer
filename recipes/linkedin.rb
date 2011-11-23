@@ -20,10 +20,6 @@ after_bundler do
 RUBY
   end
   #
-  # Migrate Authentications table
-  #
-  generate 'migration AddTokenAndSecretToAuthentications token:string secret:string'
-  #
   # linkedIn Images
   #
   inside 'app/assets/images' do

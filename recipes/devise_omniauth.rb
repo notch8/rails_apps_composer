@@ -16,7 +16,7 @@ after_bundler do
   # can have multiple authentications associated
   # with one account.
   #
-  generate :model, 'authentication user_id:integer provider:string uid:string'
+  generate :model, 'authentication user_id:integer provider:string uid:string token:string secret:string'
   #
   # Create Authentications controller 
   #      actions: create and destroy

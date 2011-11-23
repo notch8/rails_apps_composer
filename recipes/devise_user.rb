@@ -101,4 +101,4 @@ author: spinlock99
 
 requires: [pages, devise, rspec]
 run_after: [pages, devise, rspec]
-
+run_before: [devise_omniauth]

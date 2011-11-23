@@ -26,3 +26,4 @@ author: spinlock99
 
 category: other
 
+run_before: [devise, devise_user, devise_omniauth, twitter, linkedin, git, migrate_db]

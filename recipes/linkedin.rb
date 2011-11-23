@@ -66,6 +66,6 @@ name: LinkedIn
 description: "Adds linkedIn support to DeviseOmniAuth setup."
 author: spinlock
 
-requires: [pages, devise_omniauth, devise_user, migrate_db]
-run_after: [pages, devise_omniauth, devise_user]
-run_before: [migrate_db]
+requires: [pages, devise_omniauth, git, migrate_db]
+run_after: [pages, devise_omniauth]
+run_before: [git, migrate_db]

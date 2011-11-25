@@ -13,7 +13,6 @@ after_bundler do
   #
   inject_into_file "app/models/user.rb", :before => "end" do 
 <<-RUBY
-
   # protected methods
   protected
   # begin protected methods

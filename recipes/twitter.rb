@@ -56,7 +56,7 @@ RUBY
 <<-RUBY
 
   #
-  # User Twitter::Client to get user's name
+  # Use Twitter::Client to get user's name
   #
   def build_twitter(omniauth)
     Twitter.configure do |config|

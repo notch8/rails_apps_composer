@@ -40,12 +40,6 @@ after_bundler do
     get lib_devise_omniauth + 'app/assets/stylesheets/authentications.css.scss', 'authentications.css.scss'
   end # app/assets/stylesheets
   #
-  # Images
-  #
-  inside 'app/assets/images' do
-    get lib_devise_omniauth + 'app/assets/images/facebook_64.png', 'facebook_64.png'
-  end
-  #
   # User has_many Authentications
   #
   inject_into_file("app/models/user.rb", "\n  has_many :authentications", 

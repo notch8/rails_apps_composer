@@ -55,8 +55,18 @@ RUBY
   inject_into_file 'app/models/user.rb', :after => '# begin protected methods' do
 <<-RUBY
 
+  #
+  # User Twitter::Client to get user's name
+  #
   def build_twitter(omniauth)
-    self.name = omniauth['user_info']['name']
+    Twitter.configure do |config|
+      config.consumer_key = TWITTER_KEY
+      config.consumer_secret = TWITTER_SECRET
+      config.oauth_token = omniauth['credentials']['token']
+      config.oauth_token_secret = omniauth['credentials']['secret']
+    end
+    client = Twitter::Client.new
+    self.name = client.current_user.name
   end
 RUBY
   end

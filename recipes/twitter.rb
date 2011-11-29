@@ -78,6 +78,6 @@ name: Twitter
 description: "Adds Twitter support to DeviseOmniauth setup."
 author: spinlock
 
-requires: [pages, devise, devise_user, devise_omniauth, git, migrate_db]
-run_after: [pages, devise, devise_user, devise_omniauth]
+requires: [rack_bug, rspec, pages, devise, devise_user, devise_omniauth, git, migrate_db]
+run_after: [rack_bug, rspec, pages, devise, devise_user, devise_omniauth]
 run_before: [git, migrate_db]

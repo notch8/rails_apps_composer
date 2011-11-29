@@ -1,45 +1,44 @@
 # Application template recipe for the rails_apps_composer. Check for a newer version here:
 # https://github.com/RailsApps/rails_apps_composer/blob/master/recipes/rspec.rb
 
-  if recipes.include? 'rails 3.0'
-    # for Rails 3.0, use only gem versions we know that work
-    say_wizard "REMINDER: When creating a Rails app using RSpec..."
-    say_wizard "you should add the '-T' flag to 'rails new'"
-    gem 'rspec-rails', '2.6.1', :group => [:development, :test]
-    if recipes.include? 'mongoid'
-      # use the database_cleaner gem to reset the test database
-      gem 'database_cleaner', '0.6.7', :group => :test
-      # include RSpec matchers from the mongoid-rspec gem
-      gem 'mongoid-rspec', '1.4.2', :group => :test
-    end
-    if config['factory_girl']
-      # use the factory_girl gem for test fixtures
-      gem 'factory_girl_rails', '1.1.beta1', :group => :test
-    end
-  else
-    # for Rails 3.1+, use optimistic versioning for gems
-    gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]
-    if recipes.include? 'mongoid'
-      # use the database_cleaner gem to reset the test database
-      gem 'database_cleaner', '>= 0.6.7', :group => :test
-      # include RSpec matchers from the mongoid-rspec gem
-      gem 'mongoid-rspec', '>= 1.4.4', :group => :test
-    end
-      # use the factory_girl gem for test fixtures
-      gem 'factory_girl_rails', '>= 1.2.0', :group => :test
-      gem 'webrat', '>= 0.7', :group => :test
+if recipes.include? 'rails 3.0'
+  # for Rails 3.0, use only gem versions we know that work
+  say_wizard "REMINDER: When creating a Rails app using RSpec..."
+  say_wizard "you should add the '-T' flag to 'rails new'"
+  gem 'rspec-rails', '2.6.1', :group => [:development, :test]
+  if recipes.include? 'mongoid'
+    # use the database_cleaner gem to reset the test database
+    gem 'database_cleaner', '0.6.7', :group => :test
+    # include RSpec matchers from the mongoid-rspec gem
+    gem 'mongoid-rspec', '1.4.2', :group => :test
   end
+  if config['factory_girl']
+    # use the factory_girl gem for test fixtures
+    gem 'factory_girl_rails', '1.1.beta1', :group => :test
+  end
+else
+  # for Rails 3.1+, use optimistic versioning for gems
+  gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]
+  if recipes.include? 'mongoid'
+    # use the database_cleaner gem to reset the test database
+    gem 'database_cleaner', '>= 0.6.7', :group => :test
+    # include RSpec matchers from the mongoid-rspec gem
+    gem 'mongoid-rspec', '>= 1.4.4', :group => :test
+  end
+  # use the factory_girl gem for test fixtures
+  gem 'factory_girl_rails', '>= 1.2.0', :group => :test
+end
 
 # note: there is no need to specify the RSpec generator in the config/application.rb file
 
-  after_bundler do
-    say_wizard "RSpec recipe running 'after bundler'"
-    generate 'rspec:install'
-
-    say_wizard "Removing test folder (not needed for RSpec)"
-    run 'rm -rf test/'
-
-    inject_into_file 'config/application.rb', :after => "Rails::Application\n" do <<-RUBY
+after_bundler do
+  say_wizard "RSpec recipe running 'after bundler'"
+  generate 'rspec:install'
+  
+  say_wizard "Removing test folder (not needed for RSpec)"
+  run 'rm -rf test/'
+  
+  inject_into_file 'config/application.rb', :after => "Rails::Application\n" do <<-RUBY
 
     # don't generate RSpec tests for views and helpers
     config.generators do |g|
@@ -48,27 +47,16 @@
     end
 
 RUBY
-    end
+  end
+  
+  if recipes.include? 'mongoid'
     
-    inject_into_file 'spec/spec_helper.rb', "require 'webrat'\n", :after => "require 'rspec/autorun'\n"
-
-    inject_into_file 'spec/spec_helper.rb', :after => "config.mock_with :rspec" do
-<<-RUBY
-
-  # Webrat
-  config.include Webrat::Matchers, :type => :views
-
-RUBY
-    end
-
-    if recipes.include? 'mongoid'
-
-      # remove ActiveRecord artifacts
-      gsub_file 'spec/spec_helper.rb', /config.fixture_path/, '# config.fixture_path'
-      gsub_file 'spec/spec_helper.rb', /config.use_transactional_fixtures/, '# config.use_transactional_fixtures'
-
-      # reset your application database to a pristine state during testing
-      inject_into_file 'spec/spec_helper.rb', :before => "\nend" do
+    # remove ActiveRecord artifacts
+    gsub_file 'spec/spec_helper.rb', /config.fixture_path/, '# config.fixture_path'
+    gsub_file 'spec/spec_helper.rb', /config.use_transactional_fixtures/, '# config.use_transactional_fixtures'
+    
+    # reset your application database to a pristine state during testing
+    inject_into_file 'spec/spec_helper.rb', :before => "\nend" do
       <<-RUBY
   \n
   # Clean up the database
@@ -82,32 +70,32 @@ RUBY
     DatabaseCleaner.clean
   end
 RUBY
-      end
-
-      # remove either possible occurrence of "require rails/test_unit/railtie"
-      gsub_file 'config/application.rb', /require 'rails\/test_unit\/railtie'/, '# require "rails/test_unit/railtie"'
-      gsub_file 'config/application.rb', /require "rails\/test_unit\/railtie"/, '# require "rails/test_unit/railtie"'
-
-      # configure RSpec to use matchers from the mongoid-rspec gem
-      create_file 'spec/support/mongoid.rb' do 
+    end
+    
+    # remove either possible occurrence of "require rails/test_unit/railtie"
+    gsub_file 'config/application.rb', /require 'rails\/test_unit\/railtie'/, '# require "rails/test_unit/railtie"'
+    gsub_file 'config/application.rb', /require "rails\/test_unit\/railtie"/, '# require "rails/test_unit/railtie"'
+    
+    # configure RSpec to use matchers from the mongoid-rspec gem
+    create_file 'spec/support/mongoid.rb' do 
       <<-RUBY
 RSpec.configure do |config|
   config.include Mongoid::Matchers
 end
 RUBY
-      end
     end
-
-      # add Devise test helpers
-      create_file 'spec/support/devise.rb' do 
-      <<-RUBY
+  end
+  
+  # add Devise test helpers
+  create_file 'spec/support/devise.rb' do 
+    <<-RUBY
 RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
 end
 RUBY
-    end
-
   end
+  
+end
 
 __END__
 

@@ -70,6 +70,26 @@ RUBY
   end
 RUBY
   end
+  #
+  # setup spec_helper.rb to mock omniauth
+  #
+  append_file 'spec/spec_helper.rb', 
+<<-RUBY
+OmniAuth.config.mock_auth[:twitter] = {
+  'provider' => 'twitter',
+  'uid' => '12345',
+    'credentials' => {
+      'token' => '12345', 
+      'secret' => '54321'
+    }
+}
+RUBY
+  #
+  # add integration test to exercise twitter login
+  #
+  inside 'spec' do
+    get lib_twitter + 'spec/integration/twit_test.rb', 'integration/twit_test.rb'
+  end
 end # after_bundler
 
 __END__
@@ -78,6 +98,6 @@ name: Twitter
 description: "Adds Twitter support to DeviseOmniauth setup."
 author: spinlock
 
-requires: [rack_bug, rspec, pages, devise, devise_user, devise_omniauth, git, migrate_db]
-run_after: [rack_bug, rspec, pages, devise, devise_user, devise_omniauth]
+requires: [rack_bug, rspec, capybara, pages, devise, devise_user, devise_omniauth, git, migrate_db]
+run_after: [rack_bug, rspec, capybara, pages, devise, devise_user, devise_omniauth]
 run_before: [git, migrate_db]

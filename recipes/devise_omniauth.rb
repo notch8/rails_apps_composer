@@ -129,6 +129,22 @@ RUBY
   resources :authentications
 RB
   end
+  #
+  # configure OmniAuth test mode
+  #
+  inject_into_file 'spec/spec_helper.rb', :after => "RSpec.configure do |config|" do
+<<RUBY
+
+config.include IntegrationSpecHelper, :type => :request
+RUBY
+end
+  inside 'spec' do
+    get lib_devise_omniauth + 'spec/support/integration_spec_helper.rb', 'support/integration_spec_helper.rb'
+  end
+  append_file 'spec/spec_helper.rb', 
+<<-RUBY
+OmniAuth.config.test_mode = true
+RUBY
 end
 
 __END__
@@ -137,6 +153,6 @@ name: DeviseOmniAuth
 description: "Adds OmniAuth support to a Devise setup."
 author: spinlock
 
-requires: [rack_bug, pages, devise, devise_user, migrate_db, git, run_tests]
-run_after: [rack_bug, pages, devise, devise_user]
+requires: [rack_bug, rspec, pages, devise, devise_user, migrate_db, git, run_tests]
+run_after: [rack_bug, rspec, pages, devise, devise_user]
 run_before: [migrate_db, git, run_tests]

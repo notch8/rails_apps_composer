@@ -108,3 +108,4 @@ category: testing
 
 args: ["-T"]
 
+run_before: [capybara, pages, devise, devise_omniauth]

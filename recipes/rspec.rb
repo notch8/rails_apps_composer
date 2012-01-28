@@ -16,20 +16,28 @@ if config['rspec']
     gem 'factory_girl_rails', '>= 1.6.0', :group => :test
   end
 else
-  recipes.delete('rspec')
+  # for Rails 3.1+, use optimistic versioning for gems
+  gem 'rspec-rails', '>= 2.6.1', :group => [:development, :test]
+  if recipes.include? 'mongoid'
+    # use the database_cleaner gem to reset the test database
+    gem 'database_cleaner', '>= 0.6.7', :group => :test
+    # include RSpec matchers from the mongoid-rspec gem
+    gem 'mongoid-rspec', '>= 1.4.4', :group => :test
+  end
+  # use the factory_girl gem for test fixtures
+  gem 'factory_girl_rails', '>= 1.2.0', :group => :test
 end
 
 # note: there is no need to specify the RSpec generator in the config/application.rb file
 
-if config['rspec']
-  after_bundler do
-    say_wizard "RSpec recipe running 'after bundler'"
-    generate 'rspec:install'
-
-    say_wizard "Removing test folder (not needed for RSpec)"
-    run 'rm -rf test/'
-
-    inject_into_file 'config/application.rb', :after => "Rails::Application\n" do <<-RUBY
+after_bundler do
+  say_wizard "RSpec recipe running 'after bundler'"
+  generate 'rspec:install'
+  
+  say_wizard "Removing test folder (not needed for RSpec)"
+  run 'rm -rf test/'
+  
+  inject_into_file 'config/application.rb', :after => "Rails::Application\n" do <<-RUBY
 
     # don't generate RSpec tests for views and helpers
     config.generators do |g|
@@ -39,17 +47,16 @@ if config['rspec']
     end
 
 RUBY
-    end
-
-
-    if recipes.include? 'mongoid'
-
-      # remove ActiveRecord artifacts
-      gsub_file 'spec/spec_helper.rb', /config.fixture_path/, '# config.fixture_path'
-      gsub_file 'spec/spec_helper.rb', /config.use_transactional_fixtures/, '# config.use_transactional_fixtures'
-
-      # reset your application database to a pristine state during testing
-      inject_into_file 'spec/spec_helper.rb', :before => "\nend" do
+  end
+  
+  if recipes.include? 'mongoid'
+    
+    # remove ActiveRecord artifacts
+    gsub_file 'spec/spec_helper.rb', /config.fixture_path/, '# config.fixture_path'
+    gsub_file 'spec/spec_helper.rb', /config.use_transactional_fixtures/, '# config.use_transactional_fixtures'
+    
+    # reset your application database to a pristine state during testing
+    inject_into_file 'spec/spec_helper.rb', :before => "\nend" do
       <<-RUBY
   \n
   # Clean up the database
@@ -76,7 +83,6 @@ RSpec.configure do |config|
   config.include Mongoid::Matchers
 end
 RUBY
-      end
     end
 
     if recipes.include? 'devise'
@@ -87,10 +93,8 @@ RSpec.configure do |config|
   config.include Devise::TestHelpers, :type => :controller
 end
 RUBY
-      end
-    end
-
   end
+  
 end
 
 __END__
@@ -114,3 +118,5 @@ config:
   - machinist:
       type: boolean
       prompt: Would you like to use machinist for test fixtures with RSpec?
+
+run_before: [capybara, pages, devise, devise_omniauth]

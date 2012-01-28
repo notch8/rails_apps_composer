@@ -38,3 +38,5 @@ author: RailsApps
 exclusive: scm
 category: other
 tags: [scm]
+
+run_after: [migrate_db]

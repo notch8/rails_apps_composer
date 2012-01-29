@@ -11,7 +11,7 @@ after_bundler do
   #
   # add area for protected methonds
   #
-  inject_into_file "app/models/user.rb", :before => "end" do 
+  inject_into_file "app/models/user.rb", :before => "end" do
 <<-RUBY
   # protected methods
   protected
@@ -35,7 +35,7 @@ ERB
 <p><%= f.label :name %><br />
 <%= f.text_field :name %></p>
 ERB
-  end  
+  end
   #
   # Create a users controller
   #
@@ -57,32 +57,6 @@ RUBY
 devise_for :users
   resources :users, :only => :show
 RUBY
-  end
-  #
-  # Create a users show page
-  #
-  append_file 'app/views/users/show.html.erb' do
-<<-ERB
-<p>User: <%= @user.name %></p>
-<p>Email: <%= @user.email if @user.email %></p>
-ERB
-  end
-
-  #
-  # Add sign up, sign in, and sign out links to home page
-  #
-  prepend_file 'app/views/pages/home.html.erb' do 
-<<-ERB
-<p> 
-  <%= link_to "Sign Up", new_user_registration_path %>
-  <%= link_to "Sign In", new_user_session_path %>
-  <%= link_to "Sign Out", destroy_user_session_path, :method => :delete %>
-</p>
-<% if current_user %>
-  <p>signed in as: <%= current_user.name %>
-<% end %> 
-
-ERB
   end
   #
   # Add tests for devise user

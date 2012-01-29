@@ -1,11 +1,11 @@
-lib_devise_omniauth = '/home/spinlock/RoR/rails_apps_composer/lib/devise_omniauth/'
+lib_devise_omniauth = "https://raw.github.com/notch8/rails_apps_composer/master/lib/devise_omniauth"
 
 gem 'omniauth', '~> 0.3.0.rc3'
 
 after_bundler do
   say_wizard "devise_omniauth running after_bundler"
   #
-  # Add omniauth.rb to initializers to configure 
+  # Add omniauth.rb to initializers to configure
   # authentication providers for our middleware.
   #
   inside 'config/initializers' do
@@ -18,7 +18,7 @@ after_bundler do
   #
   generate :model, 'authentication user_id:integer provider:string uid:string token:string secret:string'
   #
-  # Create Authentications controller 
+  # Create Authentications controller
   #      actions: create and destroy
   #
   generate :controller, 'create destroy'
@@ -42,12 +42,12 @@ after_bundler do
   #
   # User has_many Authentications
   #
-  inject_into_file("app/models/user.rb", "\n  has_many :authentications", 
+  inject_into_file("app/models/user.rb", "\n  has_many :authentications",
                    :after => "class User < ActiveRecord::Base")
   #
   # Authentication belongs to User
-  # 
-  inject_into_file("app/models/authentication.rb", "\n  belongs_to :user", 
+  #
+  inject_into_file("app/models/authentication.rb", "\n  belongs_to :user",
                    :after => "class Authentication < ActiveRecord::Base")
   #
   # build_authentication(omniauth)
@@ -107,10 +107,10 @@ RUBY
   end
   #
   # pages#home should show authentications
-  # 
+  #
   # modify pages controller
-  inject_into_file("app/controllers/pages_controller.rb", 
-                   "\n    @authentications = current_user.authentications if current_user", 
+  inject_into_file("app/controllers/pages_controller.rb",
+                   "\n    @authentications = current_user.authentications if current_user",
                    :after => "@title = 'Home'")
   # modify pages/home.html.erb
   inject_into_file("app/views/pages/home.html.erb",
@@ -119,7 +119,7 @@ RUBY
   #
   # Routes
   #
-  inject_into_file("config/routes.rb", 
+  inject_into_file("config/routes.rb",
                  ", :controllers => {:registrations => 'registrations'}",
                    :after => "devise_for :users")
   inject_into_file "config/routes.rb", :after => "::Application.routes.draw do" do
@@ -141,7 +141,7 @@ end
   inside 'spec' do
     get lib_devise_omniauth + 'spec/support/integration_spec_helper.rb', 'support/integration_spec_helper.rb'
   end
-  append_file 'spec/spec_helper.rb', 
+  append_file 'spec/spec_helper.rb',
 <<-RUBY
 OmniAuth.config.test_mode = true
 RUBY
@@ -153,6 +153,6 @@ name: DeviseOmniAuth
 description: "Adds OmniAuth support to a Devise setup."
 author: spinlock
 
-requires: [rack_bug, rspec, pages, devise, devise_user, migrate_db, git, run_tests]
-run_after: [rack_bug, rspec, pages, devise, devise_user]
+requires: [rspec, pages, devise, devise_user, migrate_db, git, run_tests]
+run_after: [rspec, pages, devise, devise_user]
 run_before: [migrate_db, git, run_tests]

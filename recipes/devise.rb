@@ -4,9 +4,9 @@
 if config['devise']
   gem 'devise', '>= 2.0.0'
   after_bundler do
-    
+
     say_wizard "Devise recipe running 'after bundler'"
-    
+
     # Run the Devise generator
     generate 'devise:install'
 
@@ -27,12 +27,13 @@ if config['devise']
       # (see https://github.com/RailsApps/rails3-devise-rspec-cucumber/issues/3)
       gsub_file 'config/initializers/devise.rb', 'config.sign_out_via = :delete', 'config.sign_out_via = Rails.env.test? ? :get : :delete'
     end
-    
+  end
+
   say_wizard "Devise recipe running 'after bundler'"
-  
+
   # Run the Devise generator
   generate 'devise:install'
-  
+
   if recipes.include? 'mongo_mapper'
     gem 'mm-devise'
     gsub_file 'config/initializers/devise.rb', 'devise/orm/', 'devise/orm/mongo_mapper_active_model'
@@ -41,22 +42,22 @@ if config['devise']
     # Nothing to do (Devise changes its initializer automatically when Mongoid is detected)
     # gsub_file 'config/initializers/devise.rb', 'devise/orm/active_record', 'devise/orm/mongoid'
   end
-  
+
   # Prevent logging of password_confirmation
   gsub_file 'config/application.rb', /:password/, ':password, :password_confirmation'
-  
+
   if recipes.include? 'cucumber'
     # Cucumber wants to test GET requests not DELETE requests for destroy_user_session_path
     # (see https://github.com/RailsApps/rails3-devise-rspec-cucumber/issues/3)
     gsub_file 'config/initializers/devise.rb', 'config.sign_out_via = :delete', 'config.sign_out_via = Rails.env.test? ? :get : :delete'
   end
-  
+
 end
 
 after_everything do
-  
+
   say_wizard "Devise recipe running 'after everything'"
-  
+
   if recipes.include? 'rspec'
     say_wizard "Copying RSpec files from the rails3-devise-rspec-cucumber examples"
     begin
